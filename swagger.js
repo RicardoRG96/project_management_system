@@ -10,7 +10,7 @@ const options = {
         contact: {
           name: "Ricardo Retamal Guerrero",
           email: "ricardoretamal10@gmail.com",
-          url: "https://github.com/DesmondSanctity/node-js-swagger"
+          url: "https://github.com/RicardoRG96/project_management_system"
         },
         version: '1.0.0',
       },
@@ -25,7 +25,7 @@ const options = {
         },
       ]
     },
-    apis: ['./routes/*.js'],
+    apis: ['./src/*/routes/*/*-routes.js'],
 }
 const swaggerSpec = swaggerJsdoc(options)
 function swaggerDocs(app, port) {

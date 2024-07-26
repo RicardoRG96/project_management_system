@@ -1,18 +1,19 @@
 var express = require('express');
 var router = express.Router();
+const userHandler = require('../../user-handlers');
 
 /** GET Methods */
 /**
  * @openapi
- * '/user/':
+ * '/api/v1.0/user/{userId}':
  *  get:
  *     tags:
- *     - Users
- *     summary: Get a user by username
+ *     - User Handlers
+ *     summary: Get a user by userId
  *     parameters:
- *      - name: username
+ *      - id: userId
  *        in: path
- *        description: The username of the user
+ *        description: The id of the user
  *        required: true
  *     responses:
  *      200:
@@ -24,10 +25,6 @@ var router = express.Router();
  *      500:
  *        description: Server Error
  */
-
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+router.get('/:id', userHandler.getOneUser);
 
 module.exports = router;  
