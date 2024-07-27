@@ -10,6 +10,17 @@ const getUserById = async (userId, next) => {
     }   
 }
 
+const getAllUserNotifications = async (userId, next) => {
+    try {
+        const notifications = await userRepository.getAllUserNotifications(userId, next);
+        return notifications;
+    }
+    catch (err) {
+        return next(err)
+    }
+}
+
 module.exports = {
-    getUserById
+    getUserById,
+    getAllUserNotifications
 }

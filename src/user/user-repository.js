@@ -8,14 +8,19 @@ async function getUserById(userId, next) {
         FROM users WHERE id = ${userId}`;
 
     return db.any(sql)
-        .then(result => {
-            return result
-        })
-        .catch(err => {
-            return next(err);
-        })
+        .then(result => result)
+        .catch(err => next(err))
+}
+
+async function getAllUserNotifications(userId, next) {
+    const sql = `SELECT * FROM notifications WHERE user_id = ${userId}`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => next(err))
 }
 
 module.exports = {
-    getUserById
+    getUserById,
+    getAllUserNotifications
 }
