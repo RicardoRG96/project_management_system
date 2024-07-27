@@ -20,7 +20,16 @@ async function getAllUserNotifications(userId, next) {
         .catch(err => next(err))
 }
 
+async function getOneNotification(userId, notificationId, next) {
+    const sql = `SELECT * FROM notifications WHERE user_id = ${userId} AND id = ${notificationId}`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => next(err))
+}
+
 module.exports = {
     getUserById,
-    getAllUserNotifications
+    getAllUserNotifications,
+    getOneNotification
 }

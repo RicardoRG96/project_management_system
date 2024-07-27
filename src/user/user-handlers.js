@@ -28,7 +28,22 @@ const getAllUserNotifications = async (req, res ,next) => {
     }
 }
 
+const getOneNotification = async (req, res, next) => {
+    const { userId, notificationId } = req.params;
+    try {
+        const notification = await userService.getOneNotification(userId, notificationId, next);
+        if (!notification.length) {
+            return res.sendStatus(404);
+        }
+        return res.status(200).json(notification);
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
 module.exports = {
     getOneUser,
-    getAllUserNotifications
+    getAllUserNotifications,
+    getOneNotification
 }
