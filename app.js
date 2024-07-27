@@ -4,10 +4,10 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var swaggerDocs = require('./swagger');
+var swaggerDocs = require('./documentation/v1.0/swagger');
 
 // var indexRouter = require('./routes/index');
-var userRouter = require('./src/user/routes/v1/user-routes');
+var userRouter = require('./src/user/routes/v1.0/user-routes');
 
 var app = express();
 

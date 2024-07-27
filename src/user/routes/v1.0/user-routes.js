@@ -5,7 +5,7 @@ const userHandler = require('../../user-handlers');
 /** GET Methods */
 /**
  * @openapi
- * '/api/v1.0/user/{userId}':
+ * /api/v1.0/user/{userId}:
  *  get:
  *     tags:
  *     - User Handlers

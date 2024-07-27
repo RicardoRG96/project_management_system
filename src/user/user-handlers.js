@@ -2,7 +2,6 @@ const userService = require('./user-service');
 
 const getOneUser = async (req, res, next) => {
     const userId = req.params.userId;
-    if (!userId) return res.sendStatus(400);
     try {
         const user = await userService.getUserById(userId, next);
         if (!user.length) {

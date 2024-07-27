@@ -1,7 +1,11 @@
 const { db } = require('../../db/config');
 
 async function getUserById(userId, next) {
-    const sql = `SELECT * FROM users WHERE id = ${userId}`;
+    const sql = `SELECT id, 
+            username,
+            email,
+            role
+        FROM users WHERE id = ${userId}`;
 
     return db.any(sql)
         .then(result => {
