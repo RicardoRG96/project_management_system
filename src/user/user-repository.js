@@ -28,8 +28,17 @@ async function getOneNotification(userId, notificationId, next) {
         .catch(err => next(err))
 }
 
+async function getAllUserHistoryComments(userId, next) {
+    const sql = `SELECT * FROM comments WHERE user_id = ${userId}`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => next(err))
+}
+
 module.exports = {
     getUserById,
     getAllUserNotifications,
-    getOneNotification
+    getOneNotification,
+    getAllUserHistoryComments
 }

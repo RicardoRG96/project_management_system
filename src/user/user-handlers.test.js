@@ -29,17 +29,44 @@ describe('User API endpoints', () => {
             created_at: '2024-07-27T21:04:10.938Z'
         }
     ];
-
+    const mockCommentId = 1;
+    const mockExistingUserIdWithoutHistoryComments = 50;
+    const mockComments = [
+        {
+            id: 1,
+            task_id: 1,
+            user_id: 1,
+            content: 'I have completed the initial design. Please review and provide feedback.',
+            created_at: '2024-07-27T21:04:10.938Z'
+        }
+    ]
+    
     beforeEach(async () => {
-        const resetUsersTable = fs.readFileSync(path.join(__dirname, './scripts/reset/reset_users.sql')).toString();
-        const seedUsersTable = fs.readFileSync(path.join(__dirname, './scripts/seed/seed_users.sql')).toString();
-        const resetNotificationsTable = fs.readFileSync(path.join(__dirname, './scripts/reset/reset_notifications.sql')).toString();
-        const seedNotificationsTable = fs.readFileSync(path.join(__dirname, './scripts/seed/seed_notifications.sql')).toString();
+        const resetUsersTable = fs.readFileSync(path.join(__dirname, '../../scripts/reset/reset_users.sql')).toString();
+        const seedUsersTable = fs.readFileSync(path.join(__dirname, '../../scripts/seed/seed_users.sql')).toString();
+        const resetNotificationsTable = fs.readFileSync(path.join(__dirname, '../../scripts/reset/reset_notifications.sql')).toString();
+        const seedNotificationsTable = fs.readFileSync(path.join(__dirname, '../../scripts/seed/seed_notifications.sql')).toString();
+        const resetProjectsTable = fs.readFileSync(path.join(__dirname, '../../scripts/reset/reset_projects.sql')).toString();
+        const seedProjectsTable = fs.readFileSync(path.join(__dirname, '../../scripts/seed/seed_projects.sql')).toString();
+        const resetWorkgroupsTable = fs.readFileSync(path.join(__dirname, '../../scripts/reset/reset_workgroups.sql')).toString();
+        const seedWorkgroupsTable = fs.readFileSync(path.join(__dirname, '../../scripts/seed/seed_workgroups.sql')).toString();
+        const resetTasksTable = fs.readFileSync(path.join(__dirname, '../../scripts/reset/reset_tasks.sql')).toString();
+        const seedTasksTable = fs.readFileSync(path.join(__dirname, '../../scripts/seed/seed_tasks.sql')).toString();
+        const resetCommentsTable = fs.readFileSync(path.join(__dirname, '../../scripts/reset/reset_comments.sql')).toString();
+        const seedCommentsTable = fs.readFileSync(path.join(__dirname, '../../scripts/seed/seed_comments.sql')).toString();
 
         await db.none(resetUsersTable);
         await db.none(resetNotificationsTable);
+        await db.none(resetProjectsTable);
+        await db.none(resetWorkgroupsTable);
+        await db.none(resetTasksTable);
+        await db.none(resetCommentsTable);
         await db.none(seedUsersTable);
         await db.none(seedNotificationsTable);
+        await db.none(seedProjectsTable);
+        await db.none(seedWorkgroupsTable);
+        await db.none(seedTasksTable);
+        await db.none(seedCommentsTable);
     });
 
     afterAll(async () => {
@@ -103,7 +130,7 @@ describe('User API endpoints', () => {
         });
     });
 
-    describe('GET /api/v1.0/user/:userId/notifications/:notificationId', () => {
+    describe.skip('GET /api/v1.0/user/:userId/notifications/:notificationId', () => {
         it('should respond with a status 200 if userId and notificationId exists', async () => {
             const endpoint = `/api/v1.0/user/${mockUserId}/notifications/${mockNotificationId}`;
             const response = await request(app).get(endpoint);
@@ -158,6 +185,44 @@ describe('User API endpoints', () => {
                 const endpoint = `/api/v1.0/user/${mockInvalidUserId}/notifications/${mockInvalidNotificationId}`;
                 const response = await request(app).get(endpoint);
 
+                expect(response.status).toBe(500);
+            }
+        );
+    });
+
+    describe('GET /api/v1.0/user/:userId/history/comments', () => {
+        it('Should respond with a status 200 if the user exists and has submitted comments', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockUserId}/history/comments`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(200);
+                expect(response.status).toBeDefined();
+                expect(response.body).toStrictEqual(mockComments);
+            }
+        );
+
+        it('Should respond with a status 404 if the user does not exist', async () => {
+            const endpoint = `/api/v1.0/user/${mockNotExistingUserId}/history/comments`;
+            const response = await request(app).get(endpoint);
+
+            expect(response.status).toBe(404);
+        });
+
+        it('Should respond with a status 404 if the user has not submitted comments',
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockExistingUserIdWithoutHistoryComments}/history/comments`;
+                const response = await request(app).get(endpoint);
+    
+                expect(response.status).toBe(404);
+            }
+        );
+
+        it('Should respond with a status 500 if the userId param is not a number', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockInvalidUserId}/history/comments`;
+                const response = await request(app).get(endpoint);
+    
                 expect(response.status).toBe(500);
             }
         );

@@ -1,6 +1,6 @@
 const userService = require('./user-service');
 
-const getOneUser = async (req, res, next) => {
+const getOneUserHandler = async (req, res, next) => {
     const userId = req.params.userId;
     try {
         const user = await userService.getUserById(userId, next);
@@ -14,7 +14,7 @@ const getOneUser = async (req, res, next) => {
     }
 }
 
-const getAllUserNotifications = async (req, res ,next) => {
+const getAllUserNotificationsHandler = async (req, res ,next) => {
     const userId = req.params.userId;
     try {
         const notifications = await userService.getAllUserNotifications(userId, next);
@@ -28,7 +28,7 @@ const getAllUserNotifications = async (req, res ,next) => {
     }
 }
 
-const getOneNotification = async (req, res, next) => {
+const getOneNotificationHandler = async (req, res, next) => {
     const { userId, notificationId } = req.params;
     try {
         const notification = await userService.getOneNotification(userId, notificationId, next);
@@ -42,8 +42,23 @@ const getOneNotification = async (req, res, next) => {
     }
 }
 
+const getAllUserHistoryCommentsHandler = async (req, res, next) => {
+    const userId = req.params.userId;
+    try {
+        const comments = await userService.getAllUserHistoryComments(userId, next);
+        if (!comments.length) {
+            return res.sendStatus(404);
+        }
+        return res.status(200).json(comments);
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
 module.exports = {
-    getOneUser,
-    getAllUserNotifications,
-    getOneNotification
+    getOneUserHandler,
+    getAllUserNotificationsHandler,
+    getOneNotificationHandler,
+    getAllUserHistoryCommentsHandler
 }

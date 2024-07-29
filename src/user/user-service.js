@@ -30,8 +30,19 @@ const getOneNotification = async (userId, notificationId, next) => {
     }
 }
 
+const getAllUserHistoryComments = async (userId, next) => {
+    try {
+        const comments = await userRepository.getAllUserHistoryComments(userId, next);
+        return comments;
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
 module.exports = {
     getUserById,
     getAllUserNotifications,
-    getOneNotification
+    getOneNotification,
+    getAllUserHistoryComments
 }
