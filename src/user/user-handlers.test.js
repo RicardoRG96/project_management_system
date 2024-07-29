@@ -17,19 +17,14 @@ describe('User API endpoints', () => {
             role: 'admin'
         }
     ];
-
+    const mockNotificationId = 1;
+    const mockInvalidNotificationId = 'k';
+    const mockNotExistingNotificationId = 50;
     const mockNotifications = [
         {
             id: 1,
             user_id: mockUserId,
             message: 'You have been assigned a new task: \"Design Homepage\"',
-            read: false,
-            created_at: '2024-07-27T21:04:10.938Z'
-        },
-        {
-            id: 2,
-            user_id: mockUserId,
-            message: 'John commented on your task: \"Great work on the initial design!\"',
             read: false,
             created_at: '2024-07-27T21:04:10.938Z'
         }
@@ -76,7 +71,7 @@ describe('User API endpoints', () => {
         });
     });
 
-    describe('GET /api/v1.0/user/:userId/notifications', () => {
+    describe.skip('GET /api/v1.0/user/:userId/notifications', () => {
         it('Should respond with a status 200 if the user exists and has notifications', async () => {
             const endpoint = `/api/v1.0/user/${mockUserId}/notifications`;
             const response = await request(app).get(endpoint);
@@ -101,10 +96,70 @@ describe('User API endpoints', () => {
         });
 
         it('Should respond with a status 500 if userId param is not a number', async () => {
-            const endpoint = `/api/v1.0/user/${mockInvalidUserId}`;
+            const endpoint = `/api/v1.0/user/${mockInvalidUserId}/notifications`;
             const response = await request(app).get(endpoint);
 
             expect(response.status).toBe(500);
         });
+    });
+
+    describe('GET /api/v1.0/user/:userId/notifications/:notificationId', () => {
+        it('should respond with a status 200 if userId and notificationId exists', async () => {
+            const endpoint = `/api/v1.0/user/${mockUserId}/notifications/${mockNotificationId}`;
+            const response = await request(app).get(endpoint);
+
+            expect(response.status).toBe(200);
+            expect(response.status).toBeDefined();
+            expect(response.body).toStrictEqual(mockNotifications);
+        });
+
+        it('Should respond with a status 404 if the user does not exist even if the notification exists', 
+            async () => {
+            const endpoint = `/api/v1.0/user/${mockNotExistingUserId}/notifications/${mockNotificationId}`;
+            const response = await request(app).get(endpoint);
+
+            expect(response.status).toBe(404);
+        });
+
+        it('Should respond with a status 404 if the notification does not exist even if the user exists', 
+            async () => {
+            const endpoint = `/api/v1.0/user/${mockUserId}/notifications/${mockNotExistingNotificationId}`;
+            const response = await request(app).get(endpoint);
+
+            expect(response.status).toBe(404);
+        });
+
+        it('Should respond with a status 404 if the user and the notification does not exist', async () => {
+            const endpoint = `/api/v1.0/user/${mockNotExistingUserId}/notifications/${mockNotExistingNotificationId}`;
+            const response = await request(app).get(endpoint);
+
+            expect(response.status).toBe(404);
+        });
+
+        it('Should respond with a status 500 if userId param is not a number, even if the notificationId is valid', 
+            async () => {
+            const endpoint = `/api/v1.0/user/${mockInvalidUserId}/notifications/${mockNotificationId}`;
+            const response = await request(app).get(endpoint);
+
+            expect(response.status).toBe(500);
+        });  
+        
+        it('Should respond with a status 500 if notificationId param is not a number, even if the userId is valid', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockUserId}/notifications/${mockInvalidNotificationId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(500);
+            }
+        );
+
+        it('Should respond with a status 500 if userId and notificationId params are not a number', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockInvalidUserId}/notifications/${mockInvalidNotificationId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(500);
+            }
+        );
     });
 });

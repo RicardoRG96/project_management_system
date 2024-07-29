@@ -16,7 +16,7 @@ const getAllUserNotifications = async (userId, next) => {
         return notifications;
     }
     catch (err) {
-        return next(err)
+        return next(err);
     }
 }
 
