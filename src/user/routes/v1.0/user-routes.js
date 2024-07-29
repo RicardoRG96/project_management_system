@@ -98,7 +98,7 @@ router.get('/:userId/notifications', userHandler.getAllUserNotificationsHandler)
  *  get:
  *     tags:
  *     - User Handlers
- *     summary: Get all user notifications
+ *     summary: Get a specific user notification
  *     parameters:
  *      - name: userId
  *        in: path
@@ -180,4 +180,198 @@ router.get('/:userId/notifications/:notificationId', userHandler.getOneNotificat
  */
 router.get('/:userId/history/comments', userHandler.getAllUserHistoryCommentsHandler);
 
-module.exports = router;  
+/**
+ * @openapi
+ * /api/v1.0/user/{userId}/history/comments/{commentId}:
+ *  get:
+ *     tags:
+ *     - User Handlers
+ *     summary: Get a specific comment made by a user
+ *     parameters:
+ *      - name: userId
+ *        in: path
+ *        description: The id of the user
+ *        required: true
+ *      - name: commentId
+ *        in: path
+ *        description: The id of the comment
+ *        required: true
+ *     responses:
+ *      200:    
+ *        description: OK
+ *        content:
+ *           application/json:
+ *               schema:
+ *                   type: object
+ *                   properties: 
+ *                       id:
+ *                          type: number
+ *                          example: 50
+ *                       task_id:
+ *                          type: number
+ *                          example: 25
+ *                       user_id: 
+ *                          type: number
+ *                          example: 221
+ *                       content:
+ *                          type: string
+ *                          example: You have been assigned a new task. Design Homepage
+ *                       created_at:
+ *                          type: string
+ *                          example: 2024-07-25T23:45:55.006Z     
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.get('/:userId/history/comments/:commentId', userHandler.getOneUserHistoryCommentHandler);
+
+/**
+ * @openapi
+ * /api/v1.0/user/{userId}/history/attachments:
+ *  get:
+ *     tags:
+ *     - User Handlers
+ *     summary: Get all user history uploaded files
+ *     parameters:
+ *      - name: userId
+ *        in: path
+ *        description: The id of the user
+ *        required: true
+ *     responses:
+ *      200:    
+ *        description: OK
+ *        content:
+ *           application/json:
+ *               schema:
+ *                   type: object
+ *                   properties: 
+ *                       id:
+ *                          type: number
+ *                          example: 50
+ *                       task_id:
+ *                          type: number
+ *                          example: 25
+ *                       filename: 
+ *                          type: string
+ *                          example: homepage_design_mockup.png
+ *                       file_path:
+ *                          type: string
+ *                          example: /uploads/homepage_design_mockup.png
+ *                       uploaded_by:
+ *                          type: number
+ *                          example: 23
+ *                       uploaded_at:
+ *                          type: string
+ *                          example: 2024-07-25T23:45:55.006Z     
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.get('/:userId/history/attachments', userHandler.getAllUserHistoryUploadedFilesHandler);
+
+/**
+ * @openapi
+ * /api/v1.0/user/{userId}/history/attachments/{attachmentId}:
+ *  get:
+ *     tags:
+ *     - User Handlers
+ *     summary: Get a specific file uploaded by a user
+ *     parameters:
+ *      - name: userId
+ *        in: path
+ *        description: The id of the user
+ *        required: true
+ *      - name: attachmentId
+ *        in: path
+ *        description: The id of the attachment file uploaded
+ *        required: true
+ *     responses:
+ *      200:    
+ *        description: OK
+ *        content:
+ *           application/json:
+ *               schema:
+ *                   type: object
+ *                   properties: 
+ *                       id:
+ *                          type: number
+ *                          example: 50
+ *                       task_id:
+ *                          type: number
+ *                          example: 25
+ *                       filename: 
+ *                          type: string
+ *                          example: homepage_design_mockup.png
+ *                       file_path:
+ *                          type: string
+ *                          example: /uploads/homepage_design_mockup.png
+ *                       uploaded_by:
+ *                          type: number
+ *                          example: 23
+ *                       uploaded_at:
+ *                          type: string
+ *                          example: 2024-07-25T23:45:55.006Z    
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.get('/:userId/history/attachments/:attachmentId', userHandler.getOneUserHistoryUploadedfileHandler);
+
+/**
+ * @openapi
+ * /api/v1.0/user/{userId}/history/projects:
+ *  get:
+ *     tags:
+ *     - User Handlers
+ *     summary: Get all the projects that the user has participated in
+ *     parameters:
+ *      - name: userId
+ *        in: path
+ *        description: The id of the user
+ *        required: true
+ *     responses:
+ *      200:    
+ *        description: OK
+ *        content:
+ *           application/json:
+ *               schema:
+ *                   type: object
+ *                   properties: 
+ *                       project_id:
+ *                          type: number
+ *                          example: 10
+ *                       project_name:
+ *                          type: string
+ *                          example: Website Redesign
+ *                       project_description: 
+ *                          type: string
+ *                          example: Complete redesign of the company website.
+ *                       project_manager_id:
+ *                          type: number
+ *                          example: 5
+ *                       project_manager_name:
+ *                          type: string
+ *                          example: adminUser
+ *                       project_creation_date:
+ *                          type: string
+ *                          example: 2024-07-25T23:45:55.006Z
+ *                       user_id:
+ *                          type: number
+ *                          example: 2024-07-25T23:45:55.006Z
+ *                       user_role:
+ *                          type: string
+ *                          example: team_member
+ *                       user_incorporation_date:
+ *                          type: string
+ *                          example: 2024-07-25T23:45:55.006Z     
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.get('/:userId/history/projects', userHandler.getAllUserHistoryProjectsHandler);
+
+module.exports = router;

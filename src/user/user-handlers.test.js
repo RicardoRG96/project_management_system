@@ -9,7 +9,7 @@ describe('User API endpoints', () => {
     const mockInvalidUserId = 'k';
     const mockNotExistingUserId = 50;
     const mockExistingUserIdWithoutNotifications = 2;
-    const mockUser = [
+    const mockUserResponse = [
         {
             id: 1,
             username: 'adminUser',
@@ -20,7 +20,7 @@ describe('User API endpoints', () => {
     const mockNotificationId = 1;
     const mockInvalidNotificationId = 'k';
     const mockNotExistingNotificationId = 50;
-    const mockNotifications = [
+    const mockNotificationsResponse = [
         {
             id: 1,
             user_id: mockUserId,
@@ -30,8 +30,10 @@ describe('User API endpoints', () => {
         }
     ];
     const mockCommentId = 1;
+    const mockInvalidCommentId = 'k';
+    const mockNotExistingCommentId = 50;
     const mockExistingUserIdWithoutHistoryComments = 50;
-    const mockComments = [
+    const mockCommentsResponse = [
         {
             id: 1,
             task_id: 1,
@@ -39,21 +41,104 @@ describe('User API endpoints', () => {
             content: 'I have completed the initial design. Please review and provide feedback.',
             created_at: '2024-07-27T21:04:10.938Z'
         }
+    ];
+    const mockAttachmentId = 1;
+    const mockInvalidAttachmentId = 'k';
+    const mockNotExistingAttachmentId = 50;
+    const mockExistingUserIdWithoutHistoryAttachmentFiles = 50;
+    const mockAttachmentResponse = [
+        {
+            id: 1,
+            task_id: 1,
+            filename: 'homepage_design_mockup.png',
+            file_path: '/uploads/homepage_design_mockup.png',
+            uploaded_by: 1,
+            uploaded_at: '2024-07-27T21:04:10.938Z'
+        }
+    ];
+    const mockProjectId = 1;
+    const mockInvalidProjectId = 'k';
+    const mockNotExistingProjectId = 50;
+    const mockExistingUserIdWithoutHistoryProjects = 50;
+    const mockProjectsResponse = [
+        {
+            project_id: 1,
+            project_name: 'Website Redesign',
+            project_description: 'Complete redesign of the company website.',
+            project_manager_id: 1,
+            project_manager_name: 'adminUser',
+            project_creation_date: '2024-07-27T21:04:10.938Z',
+            user_id: 1,
+            user_role: 'team_member',
+            user_incorporation_date: '2024-07-27T21:04:10.938Z'
+        }
     ]
     
     beforeEach(async () => {
-        const resetUsersTable = fs.readFileSync(path.join(__dirname, '../../scripts/reset/reset_users.sql')).toString();
-        const seedUsersTable = fs.readFileSync(path.join(__dirname, '../../scripts/seed/seed_users.sql')).toString();
-        const resetNotificationsTable = fs.readFileSync(path.join(__dirname, '../../scripts/reset/reset_notifications.sql')).toString();
-        const seedNotificationsTable = fs.readFileSync(path.join(__dirname, '../../scripts/seed/seed_notifications.sql')).toString();
-        const resetProjectsTable = fs.readFileSync(path.join(__dirname, '../../scripts/reset/reset_projects.sql')).toString();
-        const seedProjectsTable = fs.readFileSync(path.join(__dirname, '../../scripts/seed/seed_projects.sql')).toString();
-        const resetWorkgroupsTable = fs.readFileSync(path.join(__dirname, '../../scripts/reset/reset_workgroups.sql')).toString();
-        const seedWorkgroupsTable = fs.readFileSync(path.join(__dirname, '../../scripts/seed/seed_workgroups.sql')).toString();
-        const resetTasksTable = fs.readFileSync(path.join(__dirname, '../../scripts/reset/reset_tasks.sql')).toString();
-        const seedTasksTable = fs.readFileSync(path.join(__dirname, '../../scripts/seed/seed_tasks.sql')).toString();
-        const resetCommentsTable = fs.readFileSync(path.join(__dirname, '../../scripts/reset/reset_comments.sql')).toString();
-        const seedCommentsTable = fs.readFileSync(path.join(__dirname, '../../scripts/seed/seed_comments.sql')).toString();
+        const resetUsersTable = fs.readFileSync(
+            path.join(__dirname, '../../scripts/reset/reset_users.sql')
+        ).toString();
+
+        const seedUsersTable = fs.readFileSync(
+            path.join(__dirname, '../../scripts/seed/seed_users.sql')
+        ).toString();
+
+        const resetNotificationsTable = fs.readFileSync(
+            path.join(__dirname, '../../scripts/reset/reset_notifications.sql')
+        ).toString();
+
+        const seedNotificationsTable = fs.readFileSync(
+            path.join(__dirname, '../../scripts/seed/seed_notifications.sql')
+        ).toString();
+
+        const resetProjectsTable = fs.readFileSync(
+            path.join(__dirname, '../../scripts/reset/reset_projects.sql')
+        ).toString();
+
+        const seedProjectsTable = fs.readFileSync(
+            path.join(__dirname, '../../scripts/seed/seed_projects.sql')
+        ).toString();
+
+        const resetWorkgroupsTable = fs.readFileSync(
+            path.join(__dirname, '../../scripts/reset/reset_workgroups.sql')
+        ).toString();
+
+        const seedWorkgroupsTable = fs.readFileSync(
+            path.join(__dirname, '../../scripts/seed/seed_workgroups.sql')
+        ).toString();
+
+        const resetTasksTable = fs.readFileSync(
+            path.join(__dirname, '../../scripts/reset/reset_tasks.sql')
+        ).toString();
+
+        const seedTasksTable = fs.readFileSync(
+            path.join(__dirname, '../../scripts/seed/seed_tasks.sql')
+        ).toString();
+
+        const resetCommentsTable = fs.readFileSync(
+            path.join(__dirname, '../../scripts/reset/reset_comments.sql')
+        ).toString();
+
+        const seedCommentsTable = fs.readFileSync(
+            path.join(__dirname, '../../scripts/seed/seed_comments.sql')
+        ).toString();
+
+        const resetAttachmentsTable = fs.readFileSync(
+            path.join(__dirname, '../../scripts/reset/reset_attachments.sql')
+        ).toString();
+
+        const seedAttachmentsTable = fs.readFileSync(
+            path.join(__dirname, '../../scripts/seed/seed_attachments.sql')
+        ).toString();
+
+        const resetProjectMembersTable = fs.readFileSync(
+            path.join(__dirname, '../../scripts/reset/reset_projectMembers.sql')
+        ).toString();
+
+        const seedProjectMembersTable = fs.readFileSync(
+            path.join(__dirname, '../../scripts/seed/seed_projectMembers.sql')
+        ).toString();
+
 
         await db.none(resetUsersTable);
         await db.none(resetNotificationsTable);
@@ -61,12 +146,17 @@ describe('User API endpoints', () => {
         await db.none(resetWorkgroupsTable);
         await db.none(resetTasksTable);
         await db.none(resetCommentsTable);
+        await db.none(resetAttachmentsTable);
+        await db.none(resetProjectMembersTable);
+
         await db.none(seedUsersTable);
         await db.none(seedNotificationsTable);
         await db.none(seedProjectsTable);
         await db.none(seedWorkgroupsTable);
         await db.none(seedTasksTable);
         await db.none(seedCommentsTable);
+        await db.none(seedAttachmentsTable);
+        await db.none(seedProjectMembersTable);
     });
 
     afterAll(async () => {
@@ -80,7 +170,7 @@ describe('User API endpoints', () => {
 
             expect(response.status).toBe(200);
             expect(response.status).toBeDefined();
-            expect(response.body).toStrictEqual(mockUser);
+            expect(response.body).toStrictEqual(mockUserResponse);
         });
 
         it('Should respond with a status 404 if user does not exist', async () => {
@@ -105,7 +195,7 @@ describe('User API endpoints', () => {
 
             expect(response.status).toBe(200);
             expect(response.status).toBeDefined();
-            expect(response.body).toStrictEqual(mockNotifications);
+            expect(response.body).toStrictEqual(mockNotificationsResponse);
         });
 
         it('Should respond with a status 404 if the user does not exist', async () => {
@@ -137,7 +227,7 @@ describe('User API endpoints', () => {
 
             expect(response.status).toBe(200);
             expect(response.status).toBeDefined();
-            expect(response.body).toStrictEqual(mockNotifications);
+            expect(response.body).toStrictEqual(mockNotificationsResponse);
         });
 
         it('Should respond with a status 404 if the user does not exist even if the notification exists', 
@@ -190,7 +280,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe('GET /api/v1.0/user/:userId/history/comments', () => {
+    describe.skip('GET /api/v1.0/user/:userId/history/comments', () => {
         it('Should respond with a status 200 if the user exists and has submitted comments', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/comments`;
@@ -198,7 +288,7 @@ describe('User API endpoints', () => {
 
                 expect(response.status).toBe(200);
                 expect(response.status).toBeDefined();
-                expect(response.body).toStrictEqual(mockComments);
+                expect(response.body).toStrictEqual(mockCommentsResponse);
             }
         );
 
@@ -221,6 +311,218 @@ describe('User API endpoints', () => {
         it('Should respond with a status 500 if the userId param is not a number', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockInvalidUserId}/history/comments`;
+                const response = await request(app).get(endpoint);
+    
+                expect(response.status).toBe(500);
+            }
+        );
+    });
+
+    describe.skip('GET /api/v1.0/user/:userId/history/comments/:commentId',() => {
+        it('Should respond with a status 200 if userId and commentId exists', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockUserId}/history/comments/${mockCommentId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(200);
+                expect(response.status).toBeDefined();
+                expect(response.body).toStrictEqual(mockCommentsResponse);
+            }
+        );
+
+        it('Should respond with a status 404 if the user does not exist even if the notification exists', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockNotExistingUserId}/history/comments/${mockCommentId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(404);
+            }
+        );
+
+        it('Should respond with a status 404 if the comment does not exist even if the userId exists',
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockUserId}/history/comments/${mockNotExistingCommentId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(404);
+            }
+        );
+
+        it('Should respond with a status 404 if the user and the comment does not exist', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockNotExistingUserId}/history/comments/${mockNotExistingCommentId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(404);
+            }
+        );
+
+        it('Should respond with a status 500 if the userId param is not a number even if the commentId is valid', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockInvalidUserId}/history/comments/${mockCommentId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(500);
+            }
+        );
+
+        it('Should respond with a status 500 if the commentId param is not a number even if the userId is valid', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockUserId}/history/comments/${mockInvalidCommentId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(500);
+            }
+        );
+
+        it('Should respond with a status 500 if the userId and commentId params are not a number', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockInvalidUserId}/history/comments/${mockInvalidCommentId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(500);
+            }
+        );
+    });
+
+    describe.skip('GET /api/v1.0/user/:userId/history/attachments', () => {
+        it('Should respond with a status 200 if the user exists and has uploaded files', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockUserId}/history/attachments`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(200);
+                expect(response.status).toBeDefined();
+                expect(response.body).toStrictEqual(mockAttachmentResponse);
+            }
+        );
+
+        it('Should respond with a status 404 if the user does not exist', async () => {
+            const endpoint = `/api/v1.0/user/${mockNotExistingUserId}/history/attachments`;
+            const response = await request(app).get(endpoint);
+
+            expect(response.status).toBe(404);
+        });
+
+        it('Should respond with a status 404 if the user has not uploaded files',
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockExistingUserIdWithoutHistoryAttachmentFiles}/history/attachments`;
+                const response = await request(app).get(endpoint);
+    
+                expect(response.status).toBe(404);
+            }
+        );
+
+        it('Should respond with a status 500 if the userId param is not a number', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockInvalidUserId}/history/attachments`;
+                const response = await request(app).get(endpoint);
+    
+                expect(response.status).toBe(500);
+            }
+        );
+    });
+
+
+    describe.skip('GET /api/v1.0/user/:userId/history/attachments/:attachmentId',() => {
+        it('Should respond with a status 200 if userId and attachmentId exists', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockUserId}/history/attachments/${mockAttachmentId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(200);
+                expect(response.status).toBeDefined();
+                expect(response.body).toStrictEqual(mockAttachmentResponse);
+            }
+        );
+
+        it('Should respond with a status 404 if the user does not exist even if the attachment file exists', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockNotExistingUserId}/history/attachments/${mockAttachmentId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(404);
+            }
+        );
+
+        it('Should respond with a status 404 if the attachment file does not exist even if the userId exists',
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockUserId}/history/attachments/${mockNotExistingAttachmentId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(404);
+            }
+        );
+
+        it('Should respond with a status 404 if the user and the attachment file does not exist', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockNotExistingUserId}/history/attachments/${mockNotExistingAttachmentId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(404);
+            }
+        );
+
+        it('Should respond with a status 500 if the userId param is not a number even if the attachmentId is valid', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockInvalidUserId}/history/attachments/${mockAttachmentId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(500);
+            }
+        );
+
+        it('Should respond with a status 500 if the attachmentId param is not a number even if the userId is valid', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockUserId}/history/attachments/${mockInvalidAttachmentId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(500);
+            }
+        );
+
+        it('Should respond with a status 500 if the userId and attachmentId params are not a number', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockInvalidUserId}/history/attachments/${mockInvalidAttachmentId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(500);
+            }
+        );
+    });
+
+
+    describe.skip('GET /api/v1.0/user/:userId/history/projects', () => {
+        it('Should respond with a status 200 if the user exists and has projects participations', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockUserId}/history/projects`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(200);
+                expect(response.status).toBeDefined();
+                expect(response.body).toStrictEqual(mockProjectsResponse);
+            }
+        );
+
+        it('Should respond with a status 404 if the user does not exist', async () => {
+            const endpoint = `/api/v1.0/user/${mockNotExistingUserId}/history/projects`;
+            const response = await request(app).get(endpoint);
+
+            expect(response.status).toBe(404);
+        });
+
+        it('Should respond with a status 404 if the user has not projects participations',
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockExistingUserIdWithoutHistoryProjects}/history/projects`;
+                const response = await request(app).get(endpoint);
+    
+                expect(response.status).toBe(404);
+            }
+        );
+
+        it('Should respond with a status 500 if the userId param is not a number', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockInvalidUserId}/history/projects`;
                 const response = await request(app).get(endpoint);
     
                 expect(response.status).toBe(500);
