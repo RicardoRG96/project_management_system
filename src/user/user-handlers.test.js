@@ -529,4 +529,71 @@ describe('User API endpoints', () => {
             }
         );
     });
+
+    describe.skip('GET /api/v1.0/user/:userId/history/projects/:projectId',() => {
+        it('Should respond with a status 200 if userId and projectId exists', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockUserId}/history/projects/${mockProjectId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(200);
+                expect(response.status).toBeDefined();
+                expect(response.body).toStrictEqual(mockProjectsResponse);
+            }
+        );
+
+        it('Should respond with a status 404 if the user does not exist even if the project exists', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockNotExistingUserId}/history/projects/${mockProjectId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(404);
+            }
+        );
+
+        it('Should respond with a status 404 if the projectId does not exist even if the userId exists',
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockUserId}/history/projects/${mockNotExistingProjectId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(404);
+            }
+        );
+
+        it('Should respond with a status 404 if the user and the project does not exist', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockNotExistingUserId}/history/projects/${mockNotExistingProjectId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(404);
+            }
+        );
+
+        it('Should respond with a status 500 if the userId param is not a number even if the projectId is valid', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockInvalidUserId}/history/projects/${mockProjectId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(500);
+            }
+        );
+
+        it('Should respond with a status 500 if the projectId param is not a number even if the userId is valid', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockUserId}/history/projects/${mockInvalidProjectId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(500);
+            }
+        );
+
+        it('Should respond with a status 500 if the userId and projectId params are not a number', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockInvalidUserId}/history/projects/${mockInvalidProjectId}`;
+                const response = await request(app).get(endpoint);
+
+                expect(response.status).toBe(500);
+            }
+        );
+    });
 });
