@@ -112,6 +112,20 @@ const getAllUserHistoryProjectsHandler = async (req, res, next) => {
     }
 }
 
+const getOneUserHistoryProjectHandler = async (req, res, next) => {
+    const { userId, projectId } = req.params;
+    try {
+        const project = await userService.getOneUserHistoryProjectService(userId, projectId, next);
+        if (!project.length) {
+            return res.sendStatus(404);
+        }
+        return res.status(200).json(project);
+    }
+    catch (err) {
+        return next(500);
+    }
+}
+
 module.exports = {
     getOneUserHandler,
     getAllUserNotificationsHandler,
@@ -120,5 +134,6 @@ module.exports = {
     getOneUserHistoryCommentHandler,
     getAllUserHistoryUploadedFilesHandler,
     getOneUserHistoryUploadedfileHandler,
-    getAllUserHistoryProjectsHandler
+    getAllUserHistoryProjectsHandler,
+    getOneUserHistoryProjectHandler
 }

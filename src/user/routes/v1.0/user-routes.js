@@ -374,4 +374,62 @@ router.get('/:userId/history/attachments/:attachmentId', userHandler.getOneUserH
  */
 router.get('/:userId/history/projects', userHandler.getAllUserHistoryProjectsHandler);
 
+/**
+ * @openapi
+ * /api/v1.0/user/{userId}/history/projects/{projectId}:
+ *  get:
+ *     tags:
+ *     - User Handlers
+ *     summary: Get a specific project that the user has participated in
+ *     parameters:
+ *      - name: userId
+ *        in: path
+ *        description: The id of the user
+ *        required: true
+ *      - name: projectId
+ *        in: path
+ *        description: The id of the project
+ *        required: true
+ *     responses:
+ *      200:    
+ *        description: OK
+ *        content:
+ *           application/json:
+ *               schema:
+ *                   type: object
+ *                   properties: 
+ *                       project_id:
+ *                          type: number
+ *                          example: 10
+ *                       project_name:
+ *                          type: string
+ *                          example: Website Redesign
+ *                       project_description: 
+ *                          type: string
+ *                          example: Complete redesign of the company website.
+ *                       project_manager_id:
+ *                          type: number
+ *                          example: 5
+ *                       project_manager_name:
+ *                          type: string
+ *                          example: adminUser
+ *                       project_creation_date:
+ *                          type: string
+ *                          example: 2024-07-25T23:45:55.006Z
+ *                       user_id:
+ *                          type: number
+ *                          example: 2024-07-25T23:45:55.006Z
+ *                       user_role:
+ *                          type: string
+ *                          example: team_member
+ *                       user_incorporation_date:
+ *                          type: string
+ *                          example: 2024-07-25T23:45:55.006Z     
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.get('/:userId/history/projects/:projectId', userHandler.getOneUserHistoryProjectHandler);
+
 module.exports = router;

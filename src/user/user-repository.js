@@ -80,6 +80,26 @@ async function getAllUserHistoryProjectsQuery(userId, next) {
         .catch(err => next(err))
 }
 
+async function getOneUserHistoryProjectQuery(userId, projectId, next) {
+    const sql = `SELECT p.id AS project_id,
+        p.name AS project_name,
+        p.description AS project_description,
+        p.owner_id AS project_manager_id,
+        u.username AS project_manager_name,
+        p.created_at AS project_creation_date,
+        pm.user_id AS user_id,
+        pm.role AS user_role,
+        pm.joined_at AS user_incorporation_date
+    FROM projects p
+    INNER JOIN projectmembers pm ON p.id = pm.project_id
+    INNER JOIN users u ON p.owner_id = u.id
+    WHERE pm.user_id = ${userId} AND p.id = ${projectId}`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => next(err))
+}
+
 module.exports = {
     getUserByIdQuery,
     getAllUserNotificationsQuery,
@@ -88,5 +108,6 @@ module.exports = {
     getOneUserHistoryCommentQuery,
     getAllUserHistoryUploadedFilesQuery,
     getOneUserHistoryUploadedfileQuery,
-    getAllUserHistoryProjectsQuery
+    getAllUserHistoryProjectsQuery,
+    getOneUserHistoryProjectQuery
 }

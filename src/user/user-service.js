@@ -80,6 +80,16 @@ const getAllUserHistoryProjectsService = async (userId, next) => {
     }
 }
 
+const getOneUserHistoryProjectService = async (userId, projectId, next) => {
+    try {
+        const project = await userRepository.getOneUserHistoryProjectQuery(userId, projectId, next);
+        return project;
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
 module.exports = {
     getUserByIdService,
     getAllUserNotificationsService,
@@ -88,5 +98,6 @@ module.exports = {
     getOneUserHistoryCommentService,
     getAllUserHistoryUploadedFilesService,
     getOneUserHistoryUploadedfileService,
-    getAllUserHistoryProjectsService
+    getAllUserHistoryProjectsService,
+    getOneUserHistoryProjectService
 }
