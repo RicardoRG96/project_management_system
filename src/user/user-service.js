@@ -1,6 +1,8 @@
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const userRepository = require('./user-repository');
 const passwordHandler = require('./password-handlers/hash-password-handler');
+const SECRET_KEY = process.env.JWT_PASSWORD;
 
 const getUserByIdService = async (userId, next) => {
     try {
@@ -110,6 +112,25 @@ const registerUserService = async (userSchema, next) => {
     }
 }
 
+const loginUserService = async (sentUserCredentials, next) => {
+    const { email } = sentUserCredentials;
+    try {
+        const storedUser = await userRepository.findUserQuery('', email, next);
+        const token = await createToken(sentUserCredentials, storedUser, next);
+        if (token) {
+            return {
+                user_id: storedUser[0].id,
+                username: storedUser[0].username,
+                token: token
+            }
+        }
+        return null;
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
 const findUserService = async (userName, email, next) => {
     try {
         const user = await userRepository.findUserQuery(userName, email, next);
@@ -117,6 +138,28 @@ const findUserService = async (userName, email, next) => {
             return true
         }
         return false;
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
+const createToken = async (sentUserCredentials, storedUserCredentials, next) => {
+    const storedEmail = storedUserCredentials[0].email;
+    const storedPassword = storedUserCredentials[0].password;
+    const sentEmail = sentUserCredentials.email;
+    const sentPassword = sentUserCredentials.password;
+    try {
+        const passwordValidation = await passwordHandler.compareSentPasswordWithPasswordStoredInDB(
+            sentPassword, 
+            storedPassword,
+            next
+        );
+        if (sentEmail === storedEmail && passwordValidation) {
+            const token = jwt.sign({ sentEmail }, SECRET_KEY, { expiresIn: '3h' });
+            return token;
+        }
+        return null;
     }
     catch (err) {
         return next(err);
@@ -134,5 +177,6 @@ module.exports = {
     getAllUserHistoryProjectsService,
     getOneUserHistoryProjectService,
     registerUserService,
-    findUserService
+    findUserService,
+    loginUserService
 }

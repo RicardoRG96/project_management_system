@@ -139,8 +139,26 @@ const registerUserHandler = async (req, res, next) => {
         if (validateIfUserExists) {
             return res.sendStatus(409);
         }
-        const user = await userService.registerUserService(userSchema, next);
-        return res.status(201).json(user);
+        const registerUser = await userService.registerUserService(userSchema, next);
+        return res.status(201).json(registerUser);
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
+const loginUserHandler = async (req, res, next) => {
+    const sentUserCredentials = req.body;
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        const loginUser = await userService.loginUserService(sentUserCredentials, next);
+        if (!loginUser) {
+            return res.status(401).json({ message: 'Authentication failed' });
+        }
+        return res.status(200).json(loginUser);
     }
     catch (err) {
         return next(err);
@@ -157,5 +175,6 @@ module.exports = {
     getOneUserHistoryUploadedfileHandler,
     getAllUserHistoryProjectsHandler,
     getOneUserHistoryProjectHandler,
-    registerUserHandler
+    registerUserHandler,
+    loginUserHandler
 }

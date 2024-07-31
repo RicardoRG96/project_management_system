@@ -480,4 +480,44 @@ router.post(
     userHandler.registerUserHandler
 );
 
+/**
+ * @openapi
+ * '/api/v1.0/user/login':
+ *  post:
+ *     tags:
+ *     - User Handler
+ *     summary: Login a user
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - email
+ *              - password
+ *            properties:
+ *              user_id:
+ *                type: number
+ *                example: 245 
+ *              username:
+ *                type: string
+ *                example: admin1
+ *              token:
+ *                type: string
+ *                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.5YfjsEsNqssar3r
+ *     responses:
+ *      200:
+ *        description: OK
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ */
+router.post(
+    '/login', 
+    validate.validateLoginRequest(), 
+    userHandler.loginUserHandler
+);
+
 module.exports = router;

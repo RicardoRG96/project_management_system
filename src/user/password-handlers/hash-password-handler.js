@@ -16,7 +16,15 @@ const generateSalt = async (next) => {
         .catch(err => next(err))
 }
 
+const compareSentPasswordWithPasswordStoredInDB = async (sentPassword, storedPassword, next) => {
+
+    return bcrypt.compare(sentPassword, storedPassword)
+        .then(matchPassword => matchPassword)
+        .catch(err => next(err))
+}
+
 module.exports = {
     generateSalt,
-    hashPassword
+    hashPassword,
+    compareSentPasswordWithPasswordStoredInDB
 }

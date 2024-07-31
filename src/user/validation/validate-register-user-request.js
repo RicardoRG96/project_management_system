@@ -9,6 +9,14 @@ const validateRegisterRequest = ()  => {
     ]
 }
 
+const validateLoginRequest = () => {
+    return [
+        body('email').isEmail().notEmpty(),
+        body('password').isLength({ min: 8 }).notEmpty().escape()
+    ]
+}
+
 module.exports = {
-    validateRegisterRequest
+    validateRegisterRequest,
+    validateLoginRequest
 }
