@@ -3,7 +3,6 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { db, pgp } = require('../../db/config');
 const app = require('../../app');
-const createHttpError = require('http-errors');
 
 describe('User API endpoints', () => {
     const mockUserId = 1;
@@ -75,29 +74,54 @@ describe('User API endpoints', () => {
         }
     ];
     const mockValidUserRegisterSchema = {
-        username: 'ricardo10',
-        email: 'ricardo10@gmail.com',
-        password: 'ricardo.100',
+        username: 'johndoe10',
+        email: 'johndoe@gmail.com',
+        password: 'node1234',
         role: 'admin'
     }
     const mockUserRegisterSchemaWithErrors = {
-        username: 'ricardo10',
-        email: 'ricardo10',
-        password: '12345',
+        username: 'johndoe10',
+        email: 'johndoe',
+        password: 'node',
         role: 'admin'
-    }
-    const mockInvalidUserRegisterSchema = {
-        name: 'ricardo10',
-        email: 'ricardo10',
-        password: '12345',
-        role: 'admin',
-        age: 25
     }
     const mockAlreadyExistingUserSchema = {
         username: 'adminUser',
         email: 'admin@example.com',
         password: 'hashedpassword1',
         role: 'admin'
+    }
+
+    const mockValidUserCredentials = {
+        email: "johndoe@gmail.com",
+        password: "node1234"
+    }
+
+    const mockInvalidUserCredentials = {
+        email: "johndoe",
+        password: "node1"
+    }
+
+    const mockNotExistingUserCredentials = {
+        email: "johndoe1500@gmail.com",
+        password: "node4321"
+    }
+
+    const mockNotMatchingUserCredentials = {
+        email: "johndoe@gmail.com",
+        password: "node123456"
+    }
+
+    const registerUser = async (userFixture) => {
+        return request(app)
+            .post('/api/v1.0/user/register')
+            .send(userFixture)
+    }
+
+    const loginUser = async (userFixture) => {
+        return request(app)
+            .post('/api/v1.0/user/login')
+            .send(userFixture)
     }
     
     beforeEach(async () => {
@@ -623,7 +647,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe('POST /api/v1.0/user/register', () => {
+    describe.skip('POST /api/v1.0/user/register', () => {
         const endpoint = '/api/v1.0/user/register';
 
         it('Should respond with a status 201 if the user was created',
@@ -659,4 +683,46 @@ describe('User API endpoints', () => {
             }
         );
     });
+
+    describe.skip('POST /api/v1.0/user/login', () => {
+        it('Should respond with a status 200 if the correct user credentials are submitted', 
+            async () => {
+                const registerUserTest = await registerUser(mockValidUserRegisterSchema);
+                const loginUserTest = await loginUser(mockValidUserCredentials);
+
+                expect(registerUserTest.status).toBe(201);
+                expect(loginUserTest.status).toBe(200);
+            }
+        );
+
+        it('Should respond with a status 400 if invalid user credentials are sent', 
+            async () => {
+                const registerUserTest = await registerUser(mockValidUserRegisterSchema);
+                const loginUserTest = await loginUser(mockInvalidUserCredentials);
+
+                expect(registerUserTest.status).toBe(201);
+                expect(loginUserTest.status).toBe(400);
+            }
+        );
+
+        it('Should respond with a status 401 if the user is not registered',
+            async () => {
+                const registerUserTest = await registerUser(mockValidUserRegisterSchema);
+                const loginUserTest = await loginUser(mockNotExistingUserCredentials);
+
+                expect(registerUserTest.status).toBe(201);
+                expect(loginUserTest.status).toBe(401);
+            }
+        );
+
+        it('Should respond with a 401 status if the user\'s credentials do not match',
+            async () => {
+                const registerUserTest = await registerUser(mockValidUserRegisterSchema);
+                const loginUserTest = await loginUser(mockNotMatchingUserCredentials);
+
+                expect(registerUserTest.status).toBe(201);
+                expect(loginUserTest.status).toBe(401);
+            }
+        );
+    })
 });

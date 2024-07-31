@@ -462,13 +462,26 @@ router.get('/:userId/history/projects/:projectId', userHandler.getOneUserHistory
  *                example: johndoe@mail.com
  *              password:
  *                type: string
- *                example: $2b$10$NG/lSTS/DdfBgGbf8pRAxeIfwZArlV3iLEMrCD6CPIAUOjhhq.iCS
+ *                example: pass12345
  *              role:
  *                type: string
  *                example: admin
  *     responses:
  *      201:
  *        description: Created
+ *        content:
+ *          application/json:
+ *             schema:
+ *                properties:
+ *                  username:
+ *                      type: string
+ *                      example: johndoe 
+ *                  email:
+ *                      type: string
+ *                      example: johndoe@mail.com
+ *                  role:
+ *                      type: string
+ *                      example: admin
  *      400:
  *        description: Bad request
  *      409:
@@ -497,18 +510,28 @@ router.post(
  *              - email
  *              - password
  *            properties:
- *              user_id:
- *                type: number
- *                example: 245 
- *              username:
+ *              email:
  *                type: string
- *                example: admin1
- *              token:
+ *                example: example@mail.com 
+ *              password:
  *                type: string
- *                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.5YfjsEsNqssar3r
+ *                example: pass.1234
  *     responses:
  *      200:
  *        description: OK
+ *        content:
+ *          application/json:
+ *             schema:
+ *                properties:
+ *                  user_id:
+ *                      type: number
+ *                      example: 545 
+ *                  username:
+ *                      type: string
+ *                      example: johndoe@mail.com
+ *                  token:
+ *                      type: string
+ *                      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.5YfjsEsNqssar3r
  *      400:
  *        description: Bad request
  *      401:

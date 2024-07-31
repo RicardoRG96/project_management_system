@@ -118,11 +118,13 @@ const loginUserService = async (sentUserCredentials, next) => {
         const storedUser = await userRepository.findUserQuery('', email, next);
         const token = await createToken(sentUserCredentials, storedUser, next);
         if (token) {
-            return {
-                user_id: storedUser[0].id,
-                username: storedUser[0].username,
-                token: token
-            }
+            return [
+                {
+                    user_id: storedUser[0].id,
+                    username: storedUser[0].username,
+                    token: token
+                }
+            ]
         }
         return null;
     }
