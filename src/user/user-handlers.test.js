@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { db, pgp } = require('../../db/config');
 const app = require('../../app');
+const createHttpError = require('http-errors');
 
 describe('User API endpoints', () => {
     const mockUserId = 1;
@@ -91,6 +92,12 @@ describe('User API endpoints', () => {
         password: '12345',
         role: 'admin',
         age: 25
+    }
+    const mockAlreadyExistingUserSchema = {
+        username: 'adminUser',
+        email: 'admin@example.com',
+        password: 'hashedpassword1',
+        role: 'admin'
     }
     
     beforeEach(async () => {
@@ -645,22 +652,11 @@ describe('User API endpoints', () => {
             async () => {
                 const response = await request(app)
                     .post(endpoint)
-                    .send(mockInvalidUserRegisterSchema)
-                    .expect(500)
+                    .send(mockAlreadyExistingUserSchema)
+                    .expect(409)
 
-                expect(response.status).toBe(500);
+                expect(response.status).toBe(409);
             }
         );
-
-        // it('Should respond with status 500 if the data sent is not in the required format', 
-        //     async () => {
-        //         const response = await request(app)
-        //             .post(endpoint)
-        //             .send(mockInvalidUserRegisterSchema)
-        //             .expect(500)
-
-        //         expect(response.status).toBe(500);
-        //     }
-        // );
     });
 });

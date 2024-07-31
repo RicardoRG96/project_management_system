@@ -135,8 +135,8 @@ const registerUserHandler = async (req, res, next) => {
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        const validateIfUserDoesNotExists = await userService.findUserService(username, email, next);
-        if (validateIfUserDoesNotExists) {
+        const validateIfUserExists = await userService.findUserService(username, email, next);
+        if (validateIfUserExists) {
             return res.sendStatus(409);
         }
         const user = await userService.registerUserService(userSchema, next);

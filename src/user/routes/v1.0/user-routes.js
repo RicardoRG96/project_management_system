@@ -473,8 +473,6 @@ router.get('/:userId/history/projects/:projectId', userHandler.getOneUserHistory
  *        description: Bad request
  *      409:
  *        description: Conflict
- *      500:
- *        description: Server Error
  */
 router.post(
     '/register', 
