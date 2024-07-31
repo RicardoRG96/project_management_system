@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const userHandler = require('../../user-handlers');
+const validate = require('../../validation/validate-register-user-request');
 
 /** GET Methods */
 
@@ -431,5 +432,54 @@ router.get('/:userId/history/projects', userHandler.getAllUserHistoryProjectsHan
  *        description: Server Error
  */
 router.get('/:userId/history/projects/:projectId', userHandler.getOneUserHistoryProjectHandler);
+
+/** POST Methods */
+
+/**
+ * @openapi
+ * '/api/v1.0/user/register':
+ *  post:
+ *     tags:
+ *     - User Handler
+ *     summary: Create a user
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - username
+ *              - email
+ *              - password
+ *              - role
+ *            properties:
+ *              username:
+ *                type: string
+ *                example: johndoe 
+ *              email:
+ *                type: string
+ *                example: johndoe@mail.com
+ *              password:
+ *                type: string
+ *                example: $2b$10$NG/lSTS/DdfBgGbf8pRAxeIfwZArlV3iLEMrCD6CPIAUOjhhq.iCS
+ *              role:
+ *                type: string
+ *                example: admin
+ *     responses:
+ *      201:
+ *        description: Created
+ *      400:
+ *        description: Bad request
+ *      409:
+ *        description: Conflict
+ *      500:
+ *        description: Server Error
+ */
+router.post(
+    '/register', 
+    validate.validateRegisterRequest(), 
+    userHandler.registerUserHandler
+);
 
 module.exports = router;

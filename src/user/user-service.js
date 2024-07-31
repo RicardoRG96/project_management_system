@@ -1,4 +1,6 @@
+const bcrypt = require('bcrypt');
 const userRepository = require('./user-repository');
+const passwordHandler = require('./password-handlers/hash-password-handler');
 
 const getUserByIdService = async (userId, next) => {
     try {
@@ -90,6 +92,37 @@ const getOneUserHistoryProjectService = async (userId, projectId, next) => {
     }
 }
 
+const registerUserService = async (userSchema, next) => {
+    const { username, email, password, role } = userSchema;
+    try {
+        const hashedPassword = await passwordHandler.hashPassword(password, next);
+        const userCredentialsWithHashedPassword = {
+            username,
+            email,
+            password: hashedPassword,
+            role
+        }
+        const user = await userRepository.registerUserQuery(userCredentialsWithHashedPassword, next);
+        return user;
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
+const findUserService = async (userName, email, next) => {
+    try {
+        const user = await userRepository.findUserQuery(userName, email, next);
+        if (user.length) {
+            return true
+        }
+        return false;
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
 module.exports = {
     getUserByIdService,
     getAllUserNotificationsService,
@@ -99,5 +132,7 @@ module.exports = {
     getAllUserHistoryUploadedFilesService,
     getOneUserHistoryUploadedfileService,
     getAllUserHistoryProjectsService,
-    getOneUserHistoryProjectService
+    getOneUserHistoryProjectService,
+    registerUserService,
+    findUserService
 }

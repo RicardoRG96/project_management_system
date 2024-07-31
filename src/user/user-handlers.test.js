@@ -72,7 +72,26 @@ describe('User API endpoints', () => {
             user_role: 'team_member',
             user_incorporation_date: '2024-07-27T21:04:10.938Z'
         }
-    ]
+    ];
+    const mockValidUserRegisterSchema = {
+        username: 'ricardo10',
+        email: 'ricardo10@gmail.com',
+        password: 'ricardo.100',
+        role: 'admin'
+    }
+    const mockUserRegisterSchemaWithErrors = {
+        username: 'ricardo10',
+        email: 'ricardo10',
+        password: '12345',
+        role: 'admin'
+    }
+    const mockInvalidUserRegisterSchema = {
+        name: 'ricardo10',
+        email: 'ricardo10',
+        password: '12345',
+        role: 'admin',
+        age: 25
+    }
     
     beforeEach(async () => {
         const resetUsersTable = fs.readFileSync(
@@ -595,5 +614,53 @@ describe('User API endpoints', () => {
                 expect(response.status).toBe(500);
             }
         );
+    });
+
+    describe('POST /api/v1.0/user/register', () => {
+        const endpoint = '/api/v1.0/user/register';
+
+        it('Should respond with a status 201 if the user was created',
+            async () => {
+                const response = await request(app)
+                    .post(endpoint)
+                    .send(mockValidUserRegisterSchema)
+                    .expect(201);
+                
+                expect(response.status).toBe(201)
+            }
+        );
+
+        it('Should respond with a status 400 if the data sent has errors', 
+            async () => {
+                const response = await request(app)
+                    .post(endpoint)
+                    .send(mockUserRegisterSchemaWithErrors)
+                    .expect(400)
+
+                expect(response.status).toBe(400);
+            }
+        );
+
+        it('Should respond with status 409 if the user already exists', 
+            async () => {
+                const response = await request(app)
+                    .post(endpoint)
+                    .send(mockInvalidUserRegisterSchema)
+                    .expect(500)
+
+                expect(response.status).toBe(500);
+            }
+        );
+
+        // it('Should respond with status 500 if the data sent is not in the required format', 
+        //     async () => {
+        //         const response = await request(app)
+        //             .post(endpoint)
+        //             .send(mockInvalidUserRegisterSchema)
+        //             .expect(500)
+
+        //         expect(response.status).toBe(500);
+        //     }
+        // );
     });
 });

@@ -100,6 +100,25 @@ async function getOneUserHistoryProjectQuery(userId, projectId, next) {
         .catch(err => next(err))
 }
 
+async function registerUserQuery(userSchema, next) {
+    const keys = Object.keys(userSchema);
+    const properties = keys.join(', ');
+    const values = keys.map(key => `'${userSchema[key]}'`).join(', ');
+    const sql = `INSERT INTO users (${properties}) VALUES (${values}) RETURNING *`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => next(err))
+}
+
+async function findUserQuery(userName, email, next) {
+    const sql = `SELECT * FROM users WHERE username = '${userName}' OR email = '${email}'`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => next(err))
+}
+
 module.exports = {
     getUserByIdQuery,
     getAllUserNotificationsQuery,
@@ -109,5 +128,7 @@ module.exports = {
     getAllUserHistoryUploadedFilesQuery,
     getOneUserHistoryUploadedfileQuery,
     getAllUserHistoryProjectsQuery,
-    getOneUserHistoryProjectQuery
+    getOneUserHistoryProjectQuery,
+    registerUserQuery,
+    findUserQuery
 }

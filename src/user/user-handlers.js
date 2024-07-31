@@ -1,3 +1,4 @@
+const { validationResult } = require('express-validator');
 const userService = require('./user-service');
 
 const getOneUserHandler = async (req, res, next) => {
@@ -122,7 +123,27 @@ const getOneUserHistoryProjectHandler = async (req, res, next) => {
         return res.status(200).json(project);
     }
     catch (err) {
-        return next(500);
+        return next(err);
+    }
+}
+
+const registerUserHandler = async (req, res, next) => {
+    const userSchema = req.body;
+    const { username, email } = req.body;
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        const validateIfUserDoesNotExists = await userService.findUserService(username, email, next);
+        if (validateIfUserDoesNotExists) {
+            return res.sendStatus(409);
+        }
+        const user = await userService.registerUserService(userSchema, next);
+        return res.status(201).json(user);
+    }
+    catch (err) {
+        return next(err);
     }
 }
 
@@ -135,5 +156,6 @@ module.exports = {
     getAllUserHistoryUploadedFilesHandler,
     getOneUserHistoryUploadedfileHandler,
     getAllUserHistoryProjectsHandler,
-    getOneUserHistoryProjectHandler
+    getOneUserHistoryProjectHandler,
+    registerUserHandler
 }
