@@ -1,5 +1,5 @@
+require('dotenv');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 const userRepository = require('./user-repository');
 const passwordHandler = require('./password-handlers/hash-password-handler');
 const SECRET_KEY = process.env.JWT_PASSWORD;
@@ -95,14 +95,13 @@ const getOneUserHistoryProjectService = async (userId, projectId, next) => {
 }
 
 const registerUserService = async (userSchema, next) => {
-    const { username, email, password, role } = userSchema;
+    const { username, email, password } = userSchema;
     try {
         const hashedPassword = await passwordHandler.hashPassword(password, next);
         const userCredentialsWithHashedPassword = {
             username,
             email,
-            password: hashedPassword,
-            role
+            password: hashedPassword
         }
         const user = await userRepository.registerUserQuery(userCredentialsWithHashedPassword, next);
         return user;
@@ -151,6 +150,7 @@ const createToken = async (sentUserCredentials, storedUserCredentials, next) => 
     const storedPassword = storedUserCredentials[0].password;
     const sentEmail = sentUserCredentials.email;
     const sentPassword = sentUserCredentials.password;
+    const userRole = storedUserCredentials[0].role;
     try {
         const passwordValidation = await passwordHandler.compareSentPasswordWithPasswordStoredInDB(
             sentPassword, 
@@ -158,7 +158,7 @@ const createToken = async (sentUserCredentials, storedUserCredentials, next) => 
             next
         );
         if (sentEmail === storedEmail && passwordValidation) {
-            const token = jwt.sign({ sentEmail }, SECRET_KEY, { expiresIn: '3h' });
+            const token = jwt.sign({ sentEmail, role: userRole }, SECRET_KEY, { expiresIn: '3h' });
             return token;
         }
         return null;

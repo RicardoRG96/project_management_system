@@ -1,7 +1,10 @@
 var express = require('express');
 var router = express.Router();
 const userHandler = require('../../user-handlers');
-const validate = require('../../validation/validate-register-user-request');
+const validate = require('../../validation/validate-user-requests');
+const verifyToken = require('../../../auth/verify-token');
+const hasPermissions = require('../../../auth/verify-role');
+const ROLES = require('../../../auth/roles');
 
 /** GET Methods */
 
@@ -91,7 +94,12 @@ router.get('/:userId', userHandler.getOneUserHandler);
  *        description: Server Error
  */
 
-router.get('/:userId/notifications', userHandler.getAllUserNotificationsHandler);
+router.get(
+    '/:userId/notifications', 
+    verifyToken, 
+    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TECHNICAL_LEADER]), 
+    userHandler.getAllUserNotificationsHandler
+);
 
 /**
  * @openapi
@@ -463,9 +471,6 @@ router.get('/:userId/history/projects/:projectId', userHandler.getOneUserHistory
  *              password:
  *                type: string
  *                example: pass12345
- *              role:
- *                type: string
- *                example: admin
  *     responses:
  *      201:
  *        description: Created
