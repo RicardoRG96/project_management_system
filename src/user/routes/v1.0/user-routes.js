@@ -45,13 +45,22 @@ const ROLES = require('../../../auth/roles');
  *                          example: admin
  *                       created_at:
  *                          type: string
- *                          example: 2024-07-25T23:45:55.006Z     
+ *                          example: 2024-07-25T23:45:55.006Z
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
  *      404:
  *        description: Not Found
  *      500:
  *        description: Server Error
  */
-router.get('/:userId', userHandler.getOneUserHandler);
+router.get(
+    '/:userId',
+    verifyToken,
+    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TEAM_MEMBER, ROLES.TECHNICAL_LEADER]), 
+    userHandler.getOneUserHandler
+);
 
 /**
  * @openapi
@@ -88,6 +97,10 @@ router.get('/:userId', userHandler.getOneUserHandler);
  *                       created_at:
  *                          type: string
  *                          example: 2024-07-25T23:45:55.006Z     
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
  *      404:
  *        description: Not Found
  *      500:
@@ -97,7 +110,7 @@ router.get('/:userId', userHandler.getOneUserHandler);
 router.get(
     '/:userId/notifications', 
     verifyToken, 
-    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TECHNICAL_LEADER]), 
+    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TEAM_MEMBER, ROLES.TECHNICAL_LEADER]), 
     userHandler.getAllUserNotificationsHandler
 );
 
@@ -140,12 +153,21 @@ router.get(
  *                       created_at:
  *                          type: string
  *                          example: 2024-07-25T23:45:55.006Z     
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
  *      404:
  *        description: Not Found
  *      500:
  *        description: Server Error
  */
-router.get('/:userId/notifications/:notificationId', userHandler.getOneNotificationHandler);
+router.get(
+    '/:userId/notifications/:notificationId',
+    verifyToken,
+    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TEAM_MEMBER, ROLES.TECHNICAL_LEADER]), 
+    userHandler.getOneNotificationHandler
+);
 
 /**
  * @openapi
@@ -182,12 +204,21 @@ router.get('/:userId/notifications/:notificationId', userHandler.getOneNotificat
  *                       created_at:
  *                          type: string
  *                          example: 2024-07-25T23:45:55.006Z     
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
  *      404:
  *        description: Not Found
  *      500:
  *        description: Server Error
  */
-router.get('/:userId/history/comments', userHandler.getAllUserHistoryCommentsHandler);
+router.get(
+    '/:userId/history/comments',
+    verifyToken,
+    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TEAM_MEMBER, ROLES.TECHNICAL_LEADER]), 
+    userHandler.getAllUserHistoryCommentsHandler
+);
 
 /**
  * @openapi
@@ -228,12 +259,21 @@ router.get('/:userId/history/comments', userHandler.getAllUserHistoryCommentsHan
  *                       created_at:
  *                          type: string
  *                          example: 2024-07-25T23:45:55.006Z     
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
  *      404:
  *        description: Not Found
  *      500:
  *        description: Server Error
  */
-router.get('/:userId/history/comments/:commentId', userHandler.getOneUserHistoryCommentHandler);
+router.get(
+    '/:userId/history/comments/:commentId',
+    verifyToken,
+    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TEAM_MEMBER, ROLES.TECHNICAL_LEADER]), 
+    userHandler.getOneUserHistoryCommentHandler
+);
 
 /**
  * @openapi
@@ -273,12 +313,21 @@ router.get('/:userId/history/comments/:commentId', userHandler.getOneUserHistory
  *                       uploaded_at:
  *                          type: string
  *                          example: 2024-07-25T23:45:55.006Z     
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
  *      404:
  *        description: Not Found
  *      500:
  *        description: Server Error
  */
-router.get('/:userId/history/attachments', userHandler.getAllUserHistoryUploadedFilesHandler);
+router.get(
+    '/:userId/history/attachments',
+    verifyToken,
+    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TEAM_MEMBER, ROLES.TECHNICAL_LEADER]),
+    userHandler.getAllUserHistoryUploadedFilesHandler
+);
 
 /**
  * @openapi
@@ -322,12 +371,21 @@ router.get('/:userId/history/attachments', userHandler.getAllUserHistoryUploaded
  *                       uploaded_at:
  *                          type: string
  *                          example: 2024-07-25T23:45:55.006Z    
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
  *      404:
  *        description: Not Found
  *      500:
  *        description: Server Error
  */
-router.get('/:userId/history/attachments/:attachmentId', userHandler.getOneUserHistoryUploadedfileHandler);
+router.get(
+    '/:userId/history/attachments/:attachmentId',
+    verifyToken,
+    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TEAM_MEMBER, ROLES.TECHNICAL_LEADER]),
+    userHandler.getOneUserHistoryUploadedfileHandler
+);
 
 /**
  * @openapi
@@ -376,12 +434,21 @@ router.get('/:userId/history/attachments/:attachmentId', userHandler.getOneUserH
  *                       user_incorporation_date:
  *                          type: string
  *                          example: 2024-07-25T23:45:55.006Z     
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
  *      404:
  *        description: Not Found
  *      500:
  *        description: Server Error
  */
-router.get('/:userId/history/projects', userHandler.getAllUserHistoryProjectsHandler);
+router.get(
+    '/:userId/history/projects',
+    verifyToken,
+    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TEAM_MEMBER, ROLES.TECHNICAL_LEADER]),
+    userHandler.getAllUserHistoryProjectsHandler
+);
 
 /**
  * @openapi
@@ -434,12 +501,21 @@ router.get('/:userId/history/projects', userHandler.getAllUserHistoryProjectsHan
  *                       user_incorporation_date:
  *                          type: string
  *                          example: 2024-07-25T23:45:55.006Z     
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
  *      404:
  *        description: Not Found
  *      500:
  *        description: Server Error
  */
-router.get('/:userId/history/projects/:projectId', userHandler.getOneUserHistoryProjectHandler);
+router.get(
+    '/:userId/history/projects/:projectId',
+    verifyToken,
+    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TEAM_MEMBER, ROLES.TECHNICAL_LEADER]),
+    userHandler.getOneUserHistoryProjectHandler
+);
 
 /** POST Methods */
 
@@ -448,7 +524,7 @@ router.get('/:userId/history/projects/:projectId', userHandler.getOneUserHistory
  * '/api/v1.0/user/register':
  *  post:
  *     tags:
- *     - User Handler
+ *     - User Handlers
  *     summary: Create a user
  *     requestBody:
  *      required: true
@@ -503,7 +579,7 @@ router.post(
  * '/api/v1.0/user/login':
  *  post:
  *     tags:
- *     - User Handler
+ *     - User Handlers
  *     summary: Login a user
  *     requestBody:
  *      required: true
