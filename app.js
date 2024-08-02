@@ -8,6 +8,7 @@ var swaggerDocs = require('./documentation/v1.0/swagger');
 
 // var indexRouter = require('./routes/index');
 var userRouter = require('./src/user/routes/v1.0/user-routes');
+var adminRouter = require('./src/admin/routes/v1.0/admin-routes');
 
 var app = express();
 
@@ -20,6 +21,7 @@ swaggerDocs(app, process.env.PORT)
 
 // app.use('/', indexRouter);
 app.use('/api/v1.0/user', userRouter);
+app.use('/api/v1.0/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

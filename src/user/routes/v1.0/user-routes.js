@@ -58,7 +58,13 @@ const ROLES = require('../../../auth/roles');
 router.get(
     '/:userId',
     verifyToken,
-    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TEAM_MEMBER, ROLES.TECHNICAL_LEADER]), 
+    hasPermissions([
+        ROLES.ADMIN, 
+        ROLES.PROJECT_MANAGER, 
+        ROLES.TEAM_MEMBER, 
+        ROLES.TECHNICAL_LEADER, 
+        ROLES.GUEST_USER
+    ]), 
     userHandler.getOneUserHandler
 );
 
@@ -110,7 +116,12 @@ router.get(
 router.get(
     '/:userId/notifications', 
     verifyToken, 
-    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TEAM_MEMBER, ROLES.TECHNICAL_LEADER]), 
+    hasPermissions([ROLES.ADMIN, 
+        ROLES.PROJECT_MANAGER, 
+        ROLES.TEAM_MEMBER, 
+        ROLES.TECHNICAL_LEADER,
+        ROLES.GUEST_USER
+    ]), 
     userHandler.getAllUserNotificationsHandler
 );
 
@@ -165,7 +176,13 @@ router.get(
 router.get(
     '/:userId/notifications/:notificationId',
     verifyToken,
-    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TEAM_MEMBER, ROLES.TECHNICAL_LEADER]), 
+    hasPermissions([
+        ROLES.ADMIN, 
+        ROLES.PROJECT_MANAGER, 
+        ROLES.TEAM_MEMBER, 
+        ROLES.TECHNICAL_LEADER,
+        ROLES.GUEST_USER
+    ]), 
     userHandler.getOneNotificationHandler
 );
 
@@ -216,7 +233,12 @@ router.get(
 router.get(
     '/:userId/history/comments',
     verifyToken,
-    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TEAM_MEMBER, ROLES.TECHNICAL_LEADER]), 
+    hasPermissions([
+        ROLES.ADMIN, 
+        ROLES.PROJECT_MANAGER, 
+        ROLES.TEAM_MEMBER, 
+        ROLES.TECHNICAL_LEADER
+    ]), 
     userHandler.getAllUserHistoryCommentsHandler
 );
 

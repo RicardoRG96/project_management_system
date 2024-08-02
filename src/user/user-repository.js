@@ -119,6 +119,60 @@ async function findUserQuery(userName, email, next) {
         .catch(err => next(err))
 }
 
+async function changeUserPermissions(userId, newRole) {
+    const sql = `UPDATE users SET role = '${newRole}' WHERE id = ${userId} RETURNING *`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => { 
+            throw new Error(err)
+        })
+}
+
+async function createUserNotifications(userId) {
+    const sql = `INSERT INTO notifications (user_id, message, read) 
+        VALUES (${userId}, 'You have been assigned a new task: Design Homepage', false) RETURNING *`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => { 
+            throw new Error(err)
+        })
+}
+
+async function createUserComment(userId) {
+    const sql = `INSERT INTO comments (task_id, user_id, content) 
+        VALUES (1, ${userId}, 'I have completed the initial design. Please review and provide feedback.') RETURNING *`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => { 
+            throw new Error(err)
+        })
+}
+
+async function createUserAttachment(userId) {
+    const sql = `INSERT INTO attachments (task_id, filename, file_path, uploaded_by) 
+        VALUES (1, 'api_documentation.pdf', '/uploads/api_documentation.pdf', ${userId}) RETURNING *`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => { 
+            throw new Error(err)
+        })
+}
+
+async function createProjectMember(userId) {
+    const sql = `INSERT INTO projectmembers (project_id, user_id, role) 
+        VALUES (1, ${userId}, 'team_member') RETURNING *`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => { 
+            throw new Error(err)
+        })
+}
+
 module.exports = {
     getUserByIdQuery,
     getAllUserNotificationsQuery,
@@ -130,5 +184,10 @@ module.exports = {
     getAllUserHistoryProjectsQuery,
     getOneUserHistoryProjectQuery,
     registerUserQuery,
-    findUserQuery
+    findUserQuery,
+    changeUserPermissions,
+    createUserNotifications,
+    createUserComment,
+    createUserAttachment,
+    createProjectMember
 }
