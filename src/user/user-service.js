@@ -94,6 +94,16 @@ const getOneUserHistoryProjectService = async (userId, projectId, next) => {
     }
 }
 
+const getAllUserHistoryWorkGroupsService = async (userId, next) => {
+    try {
+        const workgroups = await userRepository.getAllUserHistoryWorkGroupsQuery(userId, next);
+        return workgroups;
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
 const registerUserService = async (userSchema, next) => {
     const { username, email, password } = userSchema;
     try {
@@ -180,5 +190,6 @@ module.exports = {
     getOneUserHistoryProjectService,
     registerUserService,
     findUserService,
-    loginUserService
+    loginUserService,
+    getAllUserHistoryWorkGroupsService
 }

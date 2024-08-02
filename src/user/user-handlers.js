@@ -127,6 +127,20 @@ const getOneUserHistoryProjectHandler = async (req, res, next) => {
     }
 }
 
+const getAllUserHistoryWorkGroupsHandler = async (req, res, next) => {
+    const userId = req.params.userId;
+    try {
+        const workGroups = await userService.getAllUserHistoryWorkGroupsService(userId, next);
+        if (!workGroups.length) {
+            return res.sendStatus(404)
+        }
+        return res.status(200).json(workGroups)
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
 const registerUserHandler = async (req, res, next) => {
     const userSchema = req.body;
     const { username, email } = req.body;
@@ -176,5 +190,6 @@ module.exports = {
     getAllUserHistoryProjectsHandler,
     getOneUserHistoryProjectHandler,
     registerUserHandler,
-    loginUserHandler
+    loginUserHandler,
+    getAllUserHistoryWorkGroupsHandler
 }
