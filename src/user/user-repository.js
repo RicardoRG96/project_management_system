@@ -189,6 +189,16 @@ async function createProjectMember(userId) {
         })
 }
 
+async function createWorkGroupMember(userId) {
+    const sql = `INSERT INTO workgroupmembers (user_id, workgroup_id) VALUES (${userId}, 1);`
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => { 
+            throw new Error(err)
+        })
+}
+
 module.exports = {
     getUserByIdQuery,
     getAllUserNotificationsQuery,
@@ -207,4 +217,5 @@ module.exports = {
     createUserAttachment,
     createProjectMember,
     getAllUserHistoryWorkGroupsQuery,
+    createWorkGroupMember
 }
