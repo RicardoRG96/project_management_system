@@ -193,7 +193,7 @@ describe('User API endpoints', () => {
         pgp.end();
     });
 
-    describe.skip('GET /api/v1.0/user/:userId', () => {
+    describe('GET /api/v1.0/user/:userId', () => {
         it('Should respond with a status 200 if user exists', async () => {
             const endpoint = `/api/v1.0/user/${mockUserId}`;
 
@@ -255,7 +255,7 @@ describe('User API endpoints', () => {
         });
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/notifications', () => {
+    describe('GET /api/v1.0/user/:userId/notifications', () => {
         it('Should respond with a status 200 if the user exists and has notifications', 
             async () => {
             const endpoint = `/api/v1.0/user/${mockUserId}/notifications`;
@@ -331,7 +331,7 @@ describe('User API endpoints', () => {
         });
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/notifications/:notificationId', () => {
+    describe('GET /api/v1.0/user/:userId/notifications/:notificationId', () => {
         it('should respond with a status 200 if userId and notificationId exists', 
             async () => {
             const endpoint = `/api/v1.0/user/${mockUserId}/notifications/${mockNotificationId}`;
@@ -463,7 +463,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/history/comments', () => {
+    describe('GET /api/v1.0/user/:userId/history/comments', () => {
         it('Should respond with a status 200 if the user exists, has submitted comments and has permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/comments`;
@@ -567,7 +567,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/history/comments/:commentId',() => {
+    describe('GET /api/v1.0/user/:userId/history/comments/:commentId',() => {
         it('Should respond with a status 200 if userId, commentId exists and has permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/comments/${mockCommentId}`;
@@ -724,7 +724,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/history/attachments', () => {
+    describe('GET /api/v1.0/user/:userId/history/attachments', () => {
         it('Should respond with a status 200 if the user exists, has uploaded files and has permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/attachments`;
@@ -831,7 +831,7 @@ describe('User API endpoints', () => {
     });
 
 
-    describe.skip('GET /api/v1.0/user/:userId/history/attachments/:attachmentId',() => {
+    describe('GET /api/v1.0/user/:userId/history/attachments/:attachmentId',() => {
         it('Should respond with a status 200 if userId, attachmentId exists and has permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/attachments/${mockAttachmentId}`;
@@ -994,7 +994,7 @@ describe('User API endpoints', () => {
     });
 
 
-    describe.skip('GET /api/v1.0/user/:userId/history/projects', () => {
+    describe('GET /api/v1.0/user/:userId/history/projects', () => {
         it('Should respond with a status 200 if the user exists, has projects participations and has permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/projects`;
@@ -1097,7 +1097,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/history/projects/:projectId',() => {
+    describe('GET /api/v1.0/user/:userId/history/projects/:projectId',() => {
         it('Should respond with a status 200 if userId and projectId exists and has permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/projects/${mockProjectId}`;
@@ -1259,7 +1259,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/history/workgroups', () => {
+    describe('GET /api/v1.0/user/:userId/history/workgroups', () => {
         it('Should respond with a status 200 if userId exists and has permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/workgroups`;
@@ -1362,7 +1362,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/history/workgroups/:workgroupId', () => {
+    describe('GET /api/v1.0/user/:userId/history/workgroups/:workgroupId', () => {
         it('Should respond with a status 200 if the user exists, has workgroups participations and has permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/workgroups/${mockWorkgroupId}`;
@@ -1524,7 +1524,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('POST /api/v1.0/user/register', () => {
+    describe('POST /api/v1.0/user/register', () => {
         const endpoint = '/api/v1.0/user/register';
 
         it('Should respond with a status 201 if the user was created',
@@ -1561,7 +1561,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('POST /api/v1.0/user/login', () => {
+    describe('POST /api/v1.0/user/login', () => {
         it('Should respond with a status 200 if the correct user credentials are submitted', 
             async () => {
                 const registerUserTest = await registerUser(mockValidUserRegisterSchema);

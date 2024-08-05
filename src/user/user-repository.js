@@ -1,6 +1,6 @@
 const { db } = require('../../db/config');
 
-async function getUserByIdQuery(userId, next) {
+exports.getUserByIdQuery = async (userId, next) => {
     const sql = `SELECT id, 
             username,
             email,
@@ -12,7 +12,7 @@ async function getUserByIdQuery(userId, next) {
         .catch(err => next(err))
 }
 
-async function getAllUserNotificationsQuery(userId, next) {
+exports.getAllUserNotificationsQuery = async (userId, next) => {
     const sql = `SELECT * FROM notifications WHERE user_id = ${userId}`;
 
     return db.any(sql)
@@ -20,7 +20,7 @@ async function getAllUserNotificationsQuery(userId, next) {
         .catch(err => next(err))
 }
 
-async function getOneNotificationQuery(userId, notificationId, next) {
+exports.getOneNotificationQuery = async (userId, notificationId, next) => {
     const sql = `SELECT * FROM notifications WHERE user_id = ${userId} AND id = ${notificationId}`;
 
     return db.any(sql)
@@ -28,7 +28,7 @@ async function getOneNotificationQuery(userId, notificationId, next) {
         .catch(err => next(err))
 }
 
-async function getAllUserHistoryCommentsQuery(userId, next) {
+exports.getAllUserHistoryCommentsQuery = async (userId, next) => {
     const sql = `SELECT * FROM comments WHERE user_id = ${userId}`;
 
     return db.any(sql)
@@ -36,7 +36,7 @@ async function getAllUserHistoryCommentsQuery(userId, next) {
         .catch(err => next(err))
 }
 
-async function getOneUserHistoryCommentQuery(userId, commentId, next) {
+exports.getOneUserHistoryCommentQuery = async (userId, commentId, next) => {
     const sql = `SELECT * FROM comments WHERE user_id = ${userId} AND id = ${commentId}`;
 
     return db.any(sql)
@@ -44,7 +44,7 @@ async function getOneUserHistoryCommentQuery(userId, commentId, next) {
         .catch(err => next(err))
 }
 
-async function getAllUserHistoryUploadedFilesQuery(userId, next) {
+exports.getAllUserHistoryUploadedFilesQuery = async (userId, next) => {
     const sql = `SELECT * FROM attachments WHERE uploaded_by = ${userId}`;
 
     return db.any(sql)
@@ -52,7 +52,7 @@ async function getAllUserHistoryUploadedFilesQuery(userId, next) {
         .catch(err => next(err))
 }
 
-async function getOneUserHistoryUploadedfileQuery(userId, attachmentId, next) {
+exports.getOneUserHistoryUploadedfileQuery = async (userId, attachmentId, next) => {
     const sql = `SELECT * FROM attachments WHERE uploaded_by = ${userId} AND id = ${attachmentId}`;
 
     return db.any(sql)
@@ -60,7 +60,7 @@ async function getOneUserHistoryUploadedfileQuery(userId, attachmentId, next) {
         .catch(err => next(err))
 }
 
-async function getAllUserHistoryProjectsQuery(userId, next) {
+exports.getAllUserHistoryProjectsQuery = async (userId, next) => {
     const sql = `SELECT p.id AS project_id,
         p.name AS project_name,
         p.description AS project_description,
@@ -80,7 +80,7 @@ async function getAllUserHistoryProjectsQuery(userId, next) {
         .catch(err => next(err))
 }
 
-async function getOneUserHistoryProjectQuery(userId, projectId, next) {
+exports.getOneUserHistoryProjectQuery = async (userId, projectId, next) => {
     const sql = `SELECT p.id AS project_id,
         p.name AS project_name,
         p.description AS project_description,
@@ -100,7 +100,7 @@ async function getOneUserHistoryProjectQuery(userId, projectId, next) {
         .catch(err => next(err))
 }
 
-async function getAllUserHistoryWorkgroupsQuery(userId, next) {
+exports.getAllUserHistoryWorkgroupsQuery = async (userId, next) => {
     const sql = `SELECT w.id AS workgroup_id, 
         w.project_id AS project_id,
         w.name AS workgroup_name,
@@ -116,7 +116,7 @@ async function getAllUserHistoryWorkgroupsQuery(userId, next) {
         .catch(err => next(err))
 }
 
-async function getOneUserHistoryWorkgroupQuery(userId, workgroupId, next) {
+exports.getOneUserHistoryWorkgroupQuery = async (userId, workgroupId, next) => {
     const sql = `SELECT w.id AS workgroup_id, 
         w.project_id AS project_id,
         w.name AS workgroup_name,
@@ -132,7 +132,7 @@ async function getOneUserHistoryWorkgroupQuery(userId, workgroupId, next) {
         .catch(err => next(err))
 }
 
-async function registerUserQuery(userSchema, next) {
+exports.registerUserQuery = async (userSchema, next) => {
     const keys = Object.keys(userSchema);
     const properties = keys.join(', ');
     const values = keys.map(key => `'${userSchema[key]}'`).join(', ');
@@ -143,7 +143,7 @@ async function registerUserQuery(userSchema, next) {
         .catch(err => next(err))
 }
 
-async function findUserQuery(userName, email, next) {
+exports.findUserQuery = async (userName, email, next) => {
     const sql = `SELECT * FROM users WHERE username = '${userName}' OR email = '${email}'`;
 
     return db.any(sql)
@@ -151,7 +151,7 @@ async function findUserQuery(userName, email, next) {
         .catch(err => next(err))
 }
 
-async function changeUserPermissions(userId, newRole) {
+exports.changeUserPermissions = async (userId, newRole) => {
     const sql = `UPDATE users SET role = '${newRole}' WHERE id = ${userId} RETURNING *`;
 
     return db.any(sql)
@@ -161,7 +161,7 @@ async function changeUserPermissions(userId, newRole) {
         })
 }
 
-async function createUserNotifications(userId) {
+exports.createUserNotifications = async (userId) => {
     const sql = `INSERT INTO notifications (user_id, message, read) 
         VALUES (${userId}, 'You have been assigned a new task: Design Homepage', false) RETURNING *`;
 
@@ -172,7 +172,7 @@ async function createUserNotifications(userId) {
         })
 }
 
-async function createUserComment(userId) {
+exports.createUserComment = async (userId) => {
     const sql = `INSERT INTO comments (task_id, user_id, content) 
         VALUES (1, ${userId}, 'I have completed the initial design. Please review and provide feedback.') RETURNING *`;
 
@@ -183,7 +183,7 @@ async function createUserComment(userId) {
         })
 }
 
-async function createUserAttachment(userId) {
+exports.createUserAttachment = async (userId) => {
     const sql = `INSERT INTO attachments (task_id, filename, file_path, uploaded_by) 
         VALUES (1, 'api_documentation.pdf', '/uploads/api_documentation.pdf', ${userId}) RETURNING *`;
 
@@ -194,7 +194,7 @@ async function createUserAttachment(userId) {
         })
 }
 
-async function createProjectMember(userId) {
+exports.createProjectMember = async (userId) => {
     const sql = `INSERT INTO projectmembers (project_id, user_id, role) 
         VALUES (1, ${userId}, 'team_member') RETURNING *`;
 
@@ -205,7 +205,7 @@ async function createProjectMember(userId) {
         })
 }
 
-async function createWorkGroupMember(userId) {
+exports.createWorkGroupMember = async (userId) => {
     const sql = `INSERT INTO workgroupmembers (user_id, workgroup_id) VALUES (${userId}, 1);`
 
     return db.any(sql)
@@ -213,26 +213,4 @@ async function createWorkGroupMember(userId) {
         .catch(err => { 
             throw new Error(err)
         })
-}
-
-module.exports = {
-    getUserByIdQuery,
-    getAllUserNotificationsQuery,
-    getOneNotificationQuery,
-    getAllUserHistoryCommentsQuery,
-    getOneUserHistoryCommentQuery,
-    getAllUserHistoryUploadedFilesQuery,
-    getOneUserHistoryUploadedfileQuery,
-    getAllUserHistoryProjectsQuery,
-    getOneUserHistoryProjectQuery,
-    registerUserQuery,
-    findUserQuery,
-    changeUserPermissions,
-    createUserNotifications,
-    createUserComment,
-    createUserAttachment,
-    createProjectMember,
-    getAllUserHistoryWorkgroupsQuery,
-    createWorkGroupMember,
-    getOneUserHistoryWorkgroupQuery
 }
