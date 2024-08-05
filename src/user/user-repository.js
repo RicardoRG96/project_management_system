@@ -100,7 +100,7 @@ async function getOneUserHistoryProjectQuery(userId, projectId, next) {
         .catch(err => next(err))
 }
 
-async function getAllUserHistoryWorkGroupsQuery(userId, next) {
+async function getAllUserHistoryWorkgroupsQuery(userId, next) {
     const sql = `SELECT w.id AS workgroup_id, 
         w.project_id AS project_id,
         w.name AS workgroup_name,
@@ -110,6 +110,22 @@ async function getAllUserHistoryWorkGroupsQuery(userId, next) {
     FROM workgroups w
     INNER JOIN workgroupmembers wm ON w.id = wm.workgroup_id
     WHERE wm.user_id = ${userId}`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => next(err))
+}
+
+async function getOneUserHistoryWorkgroupQuery(userId, workgroupId, next) {
+    const sql = `SELECT w.id AS workgroup_id, 
+        w.project_id AS project_id,
+        w.name AS workgroup_name,
+        w.leader_id AS technical_lead_id,
+        w.created_at AS workgroup_creation_date,
+        wm.user_id AS user_id
+    FROM workgroups w
+    INNER JOIN workgroupmembers wm ON w.id = wm.workgroup_id
+    WHERE wm.user_id = ${userId} AND w.id = ${workgroupId}`;
 
     return db.any(sql)
         .then(result => result)
@@ -216,6 +232,7 @@ module.exports = {
     createUserComment,
     createUserAttachment,
     createProjectMember,
-    getAllUserHistoryWorkGroupsQuery,
-    createWorkGroupMember
+    getAllUserHistoryWorkgroupsQuery,
+    createWorkGroupMember,
+    getOneUserHistoryWorkgroupQuery
 }

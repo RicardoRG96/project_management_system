@@ -94,10 +94,20 @@ const getOneUserHistoryProjectService = async (userId, projectId, next) => {
     }
 }
 
-const getAllUserHistoryWorkGroupsService = async (userId, next) => {
+const getAllUserHistoryWorkgroupsService = async (userId, next) => {
     try {
-        const workgroups = await userRepository.getAllUserHistoryWorkGroupsQuery(userId, next);
+        const workgroups = await userRepository.getAllUserHistoryWorkgroupsQuery(userId, next);
         return workgroups;
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
+const getOneUserHistoryWorkgroupService = async (userId, workgroupId, next) => {
+    try {
+        const workgroup = await userRepository.getOneUserHistoryWorkgroupQuery(userId, workgroupId, next);
+        return workgroup;
     }
     catch (err) {
         return next(err);
@@ -191,5 +201,6 @@ module.exports = {
     registerUserService,
     findUserService,
     loginUserService,
-    getAllUserHistoryWorkGroupsService
+    getAllUserHistoryWorkgroupsService,
+    getOneUserHistoryWorkgroupService
 }

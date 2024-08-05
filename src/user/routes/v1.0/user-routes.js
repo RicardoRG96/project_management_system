@@ -590,7 +590,65 @@ router.get(
     '/:userId/history/workgroups',
     verifyToken,
     hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TEAM_MEMBER, ROLES.TECHNICAL_LEADER]),
-    userHandler.getAllUserHistoryWorkGroupsHandler
+    userHandler.getAllUserHistoryWorkgroupsHandler
+);
+
+/**
+ * @openapi
+ * /api/v1.0/user/{userId}/history/workgroups/{workgroupId}:
+ *  get:
+ *     tags:
+ *     - User Handlers
+ *     summary: Get a specific workgroup that the user has participated in
+ *     parameters:
+ *      - name: userId
+ *        in: path
+ *        description: The id of the user
+ *        required: true
+ *      - name: workgroupId
+ *        in: path
+ *        description: The id of the workgroup
+ *        required: true
+ *     responses:
+ *      200:    
+ *        description: OK
+ *        content:
+ *           application/json:
+ *               schema:
+ *                   type: object
+ *                   properties: 
+ *                       workgroup_id:
+ *                          type: number
+ *                          example: 10
+ *                       project_id:
+ *                          type: number
+ *                          example: 5
+ *                       workgroup_name: 
+ *                          type: string
+ *                          example: Backend Team.
+ *                       technical_lead_id:
+ *                          type: number
+ *                          example: 5
+ *                       workgroup_creation_date:
+ *                          type: string
+ *                          example: 2024-07-25T23:45:55.006Z
+ *                       user_id:
+ *                          type: number
+ *                          example: 23  
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.get(
+    '/:userId/history/workgroups/:workgroupId',
+    verifyToken,
+    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TEAM_MEMBER, ROLES.TECHNICAL_LEADER]),
+    userHandler.getOneUserHistoryWorkgroupHandler
 );
 
 /** POST Methods */

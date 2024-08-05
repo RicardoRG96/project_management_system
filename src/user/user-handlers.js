@@ -127,14 +127,28 @@ const getOneUserHistoryProjectHandler = async (req, res, next) => {
     }
 }
 
-const getAllUserHistoryWorkGroupsHandler = async (req, res, next) => {
+const getAllUserHistoryWorkgroupsHandler = async (req, res, next) => {
     const userId = req.params.userId;
     try {
-        const workGroups = await userService.getAllUserHistoryWorkGroupsService(userId, next);
-        if (!workGroups.length) {
+        const workgroups = await userService.getAllUserHistoryWorkgroupsService(userId, next);
+        if (!workgroups.length) {
             return res.sendStatus(404)
         }
-        return res.status(200).json(workGroups)
+        return res.status(200).json(workgroups)
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
+const getOneUserHistoryWorkgroupHandler = async (req, res, next) => {
+    const { userId, workgroupId } = req.params;
+    try {
+        const workgroup = await userService.getOneUserHistoryWorkgroupService(userId, workgroupId, next);
+        if (!workgroup.length) {
+            return res.sendStatus(404);
+        }
+        return res.status(200).json(workgroup);
     }
     catch (err) {
         return next(err);
@@ -191,5 +205,6 @@ module.exports = {
     getOneUserHistoryProjectHandler,
     registerUserHandler,
     loginUserHandler,
-    getAllUserHistoryWorkGroupsHandler
+    getAllUserHistoryWorkgroupsHandler,
+    getOneUserHistoryWorkgroupHandler
 }
