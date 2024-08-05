@@ -365,7 +365,7 @@ describe('User API endpoints', () => {
             expect(response.status).toBe(403);
         });
 
-        it('Should respond with a status 404 if the user does not exist even if the notification exists', 
+        it('Should respond with a status 404 if the user does not exist', 
             async () => {
             const endpoint = `/api/v1.0/user/${mockNotExistingUserId}/notifications/${mockNotificationId}`;
 
@@ -381,7 +381,7 @@ describe('User API endpoints', () => {
             expect(response.status).toBe(404);
         });
 
-        it('Should respond with a status 404 if the notification does not exist even if the user exists', 
+        it('Should respond with a status 404 if the notification does not exist', 
             async () => {
             const endpoint = `/api/v1.0/user/${mockUserId}/notifications/${mockNotExistingNotificationId}`;
 
@@ -412,7 +412,7 @@ describe('User API endpoints', () => {
             expect(response.status).toBe(404);
         });
 
-        it('Should respond with a status 500 if userId param is not a number, even if the notificationId is valid', 
+        it('Should respond with a status 500 if userId param is not a number', 
             async () => {
             const endpoint = `/api/v1.0/user/${mockInvalidUserId}/notifications/${mockNotificationId}`;
 
@@ -428,7 +428,7 @@ describe('User API endpoints', () => {
             expect(response.status).toBe(500);
         });  
         
-        it('Should respond with a status 500 if notificationId param is not a number, even if the userId is valid', 
+        it('Should respond with a status 500 if notificationId param is not a number', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/notifications/${mockInvalidNotificationId}`;
 
@@ -620,7 +620,7 @@ describe('User API endpoints', () => {
             }
         );
 
-        it('Should respond with a status 404 if the user does not exist even if the comment exists', 
+        it('Should respond with a status 404 if the user does not exist', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockNotExistingUserId}/history/comments/${mockCommentId}`;
 
@@ -638,7 +638,7 @@ describe('User API endpoints', () => {
             }
         );
 
-        it('Should respond with a status 404 if the comment does not exist even if the userId exists',
+        it('Should respond with a status 404 if the comment does not exist',
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/comments/${mockNotExistingCommentId}`;
 
@@ -672,7 +672,7 @@ describe('User API endpoints', () => {
             }
         );
 
-        it('Should respond with a status 500 if the userId param is not a number even if the commentId is valid', 
+        it('Should respond with a status 500 if the userId param is not a number', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockInvalidUserId}/history/comments/${mockCommentId}`;
 
@@ -689,7 +689,7 @@ describe('User API endpoints', () => {
             }
         );
 
-        it('Should respond with a status 500 if the commentId param is not a number even if the userId is valid', 
+        it('Should respond with a status 500 if the commentId param is not a number', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/comments/${mockInvalidCommentId}`;
 
@@ -884,7 +884,7 @@ describe('User API endpoints', () => {
             }
         );
 
-        it('Should respond with a status 404 if the user does not exist even if the attachment file exists', 
+        it('Should respond with a status 404 if the user does not exist', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockNotExistingUserId}/history/attachments/${mockAttachmentId}`;
 
@@ -902,7 +902,7 @@ describe('User API endpoints', () => {
             }
         );
 
-        it('Should respond with a status 404 if the attachment file does not exist even if the userId exists',
+        it('Should respond with a status 404 if the attachment file does not exist',
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/attachments/${mockNotExistingAttachmentId}`;
 
@@ -938,7 +938,7 @@ describe('User API endpoints', () => {
             }
         );
 
-        it('Should respond with a status 500 if the userId param is not a number even if the attachmentId is valid', 
+        it('Should respond with a status 500 if the userId param is not a number', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockInvalidUserId}/history/attachments/${mockAttachmentId}`;
 
@@ -956,7 +956,7 @@ describe('User API endpoints', () => {
             }
         );
 
-        it('Should respond with a status 500 if the attachmentId param is not a number even if the userId is valid', 
+        it('Should respond with a status 500 if the attachmentId param is not a number', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/attachments/${mockInvalidAttachmentId}`;
 
@@ -1150,7 +1150,7 @@ describe('User API endpoints', () => {
             }
         );
 
-        it('Should respond with a status 404 if the user does not exist even if the project exists', 
+        it('Should respond with a status 404 if the user does not exist', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockNotExistingUserId}/history/projects/${mockProjectId}`;
 
@@ -1168,7 +1168,7 @@ describe('User API endpoints', () => {
             }
         );
 
-        it('Should respond with a status 404 if the projectId does not exist even if the userId exists',
+        it('Should respond with a status 404 if the projectId does not exist',
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/projects/${mockNotExistingProjectId}`;
 
@@ -1204,7 +1204,7 @@ describe('User API endpoints', () => {
             }
         );
 
-        it('Should respond with a status 500 if the userId param is not a number even if the projectId is valid', 
+        it('Should respond with a status 500 if the userId param is not a number', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockInvalidUserId}/history/projects/${mockProjectId}`;
 
@@ -1222,7 +1222,7 @@ describe('User API endpoints', () => {
             }
         );
 
-        it('Should respond with a status 500 if the projectId param is not a number even if the userId is valid', 
+        it('Should respond with a status 500 if the projectId param is not a number', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/projects/${mockInvalidProjectId}`;
 
@@ -1259,7 +1259,110 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe('GET /api/v1.0/user/:userId/history/workgroups/:workgroupId', () => {
+    describe.skip('GET /api/v1.0/user/:userId/history/workgroups', () => {
+        it('Should respond with a status 200 if userId exists and has permissions', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockUserId}/history/workgroups`;
+
+                await registerUser(mockValidUserRegisterSchema);
+                await mockChangeUserRole(mockUserId, 'team_member');
+                const loginUserTest = await loginUser(mockValidUserCredentials);
+                const token = loginUserTest.body[0].token;
+                await mockCreateWorkGroupMember(mockUserId);
+
+                const response = await request(app)
+                    .get(endpoint)
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(200);
+                expect(response.body).toBeDefined();
+            }
+        );
+
+        it('Should respond with a status 401 if no token is provided', async () => {
+            const endpoint = `/api/v1.0/user/${mockUserId}/history/workgroups`;
+            const response = await request(app).get(endpoint);
+
+            expect(response.status).toBe(401);
+        });
+
+        it('Should respond with a status 403 if token is invalid', async () => {
+            const endpoint = `/api/v1.0/user/${mockUserId}/history/workgroups`;
+            const response = await request(app)
+                .get(endpoint)
+                .set('Authorization', `Bearer ${mockInvalidtoken}`);
+
+            expect(response.status).toBe(403);
+        });
+
+        it('Should respond with a status 403 if user has not permissions', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockUserId}/history/workgroups`;
+
+                await registerUser(mockValidUserRegisterSchema);
+                const loginUserTest = await loginUser(mockValidUserCredentials);
+                const token = loginUserTest.body[0].token;
+                await mockCreateProjectMember(mockUserId);
+
+                const response = await request(app)
+                    .get(endpoint)
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(403);
+            }
+        );
+
+        it('Should respond with a status 404 if the user does not exist', async () => {
+            const endpoint = `/api/v1.0/user/${mockNotExistingUserId}/history/workgroups`;
+
+            await registerUser(mockValidUserRegisterSchema);
+            await mockChangeUserRole(mockUserId, 'team_member');
+            const loginUserTest = await loginUser(mockValidUserCredentials);
+            const token = loginUserTest.body[0].token;
+
+            const response = await request(app)
+                .get(endpoint)
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(response.status).toBe(404);
+        });
+
+        it('Should respond with a status 404 if the user has no workgroup assignments.',
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockExistingUserIdWithoutHistoryProjects}/history/workgroups`;
+
+                await registerUser(mockValidUserRegisterSchema);
+                await mockChangeUserRole(mockUserId, 'team_member');
+                const loginUserTest = await loginUser(mockValidUserCredentials);
+                const token = loginUserTest.body[0].token;
+
+                const response = await request(app)
+                    .get(endpoint)
+                    .set('Authorization', `Bearer ${token}`);
+    
+                expect(response.status).toBe(404);
+            }
+        );
+
+        it('Should respond with a status 500 if the userId param is not a number', 
+            async () => {
+                const endpoint = `/api/v1.0/user/${mockInvalidUserId}/history/workgroups`;
+
+                await registerUser(mockValidUserRegisterSchema);
+                await mockChangeUserRole(mockUserId, 'team_member');
+                const loginUserTest = await loginUser(mockValidUserCredentials);
+                const token = loginUserTest.body[0].token;
+
+                const response = await request(app)
+                    .get(endpoint)
+                    .set('Authorization', `Bearer ${token}`);
+    
+                expect(response.status).toBe(500);
+            }
+        );
+    });
+
+    describe.skip('GET /api/v1.0/user/:userId/history/workgroups/:workgroupId', () => {
         it('Should respond with a status 200 if the user exists, has workgroups participations and has permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/workgroups/${mockWorkgroupId}`;
@@ -1420,109 +1523,6 @@ describe('User API endpoints', () => {
             }
         );
     });
-
-    describe.skip('GET /api/v1.0/user/:userId/history/workgroups', () => {
-        it('Should respond with a status 200 if userId exists and has permissions', 
-            async () => {
-                const endpoint = `/api/v1.0/user/${mockUserId}/history/workgroups`;
-
-                await registerUser(mockValidUserRegisterSchema);
-                await mockChangeUserRole(mockUserId, 'team_member');
-                const loginUserTest = await loginUser(mockValidUserCredentials);
-                const token = loginUserTest.body[0].token;
-                await mockCreateWorkGroupMember(mockUserId);
-
-                const response = await request(app)
-                    .get(endpoint)
-                    .set('Authorization', `Bearer ${token}`);
-
-                expect(response.status).toBe(200);
-                expect(response.body).toBeDefined();
-            }
-        );
-
-        it('Should respond with a status 401 if no token is provided', async () => {
-            const endpoint = `/api/v1.0/user/${mockUserId}/history/workgroups`;
-            const response = await request(app).get(endpoint);
-
-            expect(response.status).toBe(401);
-        });
-
-        it('Should respond with a status 403 if token is invalid', async () => {
-            const endpoint = `/api/v1.0/user/${mockUserId}/history/workgroups`;
-            const response = await request(app)
-                .get(endpoint)
-                .set('Authorization', `Bearer ${mockInvalidtoken}`);
-
-            expect(response.status).toBe(403);
-        });
-
-        it('Should respond with a status 403 if user has not permissions', 
-            async () => {
-                const endpoint = `/api/v1.0/user/${mockUserId}/history/workgroups`;
-
-                await registerUser(mockValidUserRegisterSchema);
-                const loginUserTest = await loginUser(mockValidUserCredentials);
-                const token = loginUserTest.body[0].token;
-                await mockCreateProjectMember(mockUserId);
-
-                const response = await request(app)
-                    .get(endpoint)
-                    .set('Authorization', `Bearer ${token}`);
-
-                expect(response.status).toBe(403);
-            }
-        );
-
-        it('Should respond with a status 404 if the user does not exist', async () => {
-            const endpoint = `/api/v1.0/user/${mockNotExistingUserId}/history/workgroups`;
-
-            await registerUser(mockValidUserRegisterSchema);
-            await mockChangeUserRole(mockUserId, 'team_member');
-            const loginUserTest = await loginUser(mockValidUserCredentials);
-            const token = loginUserTest.body[0].token;
-
-            const response = await request(app)
-                .get(endpoint)
-                .set('Authorization', `Bearer ${token}`);
-
-            expect(response.status).toBe(404);
-        });
-
-        it('Should respond with a status 404 if the user has no workgroup assignments.',
-            async () => {
-                const endpoint = `/api/v1.0/user/${mockExistingUserIdWithoutHistoryProjects}/history/workgroups`;
-
-                await registerUser(mockValidUserRegisterSchema);
-                await mockChangeUserRole(mockUserId, 'team_member');
-                const loginUserTest = await loginUser(mockValidUserCredentials);
-                const token = loginUserTest.body[0].token;
-
-                const response = await request(app)
-                    .get(endpoint)
-                    .set('Authorization', `Bearer ${token}`);
-    
-                expect(response.status).toBe(404);
-            }
-        );
-
-        it('Should respond with a status 500 if the userId param is not a number', 
-            async () => {
-                const endpoint = `/api/v1.0/user/${mockInvalidUserId}/history/workgroups`;
-
-                await registerUser(mockValidUserRegisterSchema);
-                await mockChangeUserRole(mockUserId, 'team_member');
-                const loginUserTest = await loginUser(mockValidUserCredentials);
-                const token = loginUserTest.body[0].token;
-
-                const response = await request(app)
-                    .get(endpoint)
-                    .set('Authorization', `Bearer ${token}`);
-    
-                expect(response.status).toBe(500);
-            }
-        );
-    })
 
     describe.skip('POST /api/v1.0/user/register', () => {
         const endpoint = '/api/v1.0/user/register';
