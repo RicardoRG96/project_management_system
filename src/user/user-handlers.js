@@ -1,7 +1,7 @@
 const { validationResult } = require('express-validator');
 const userService = require('./user-service');
 
-const getOneUserHandler = async (req, res, next) => {
+exports.getOneUserHandler = async (req, res, next) => {
     const userId = req.params.userId;
     try {
         const user = await userService.getUserByIdService(userId, next);
@@ -15,7 +15,7 @@ const getOneUserHandler = async (req, res, next) => {
     }
 }
 
-const getAllUserNotificationsHandler = async (req, res ,next) => {
+exports.getAllUserNotificationsHandler = async (req, res ,next) => {
     const userId = req.params.userId;
     try {
         const notifications = await userService.getAllUserNotificationsService(userId, next);
@@ -29,7 +29,7 @@ const getAllUserNotificationsHandler = async (req, res ,next) => {
     }
 }
 
-const getOneNotificationHandler = async (req, res, next) => {
+exports.getOneNotificationHandler = async (req, res, next) => {
     const { userId, notificationId } = req.params;
     try {
         const notification = await userService.getOneNotificationService(userId, notificationId, next);
@@ -43,7 +43,7 @@ const getOneNotificationHandler = async (req, res, next) => {
     }
 }
 
-const getAllUserHistoryCommentsHandler = async (req, res, next) => {
+exports.getAllUserHistoryCommentsHandler = async (req, res, next) => {
     const userId = req.params.userId;
     try {
         const comments = await userService.getAllUserHistoryCommentsService(userId, next);
@@ -57,7 +57,7 @@ const getAllUserHistoryCommentsHandler = async (req, res, next) => {
     }
 }
 
-const getOneUserHistoryCommentHandler = async (req, res, next) => {
+exports.getOneUserHistoryCommentHandler = async (req, res, next) => {
     const { userId, commentId } = req.params;
     try {
         const comment = await userService.getOneUserHistoryCommentService(userId, commentId, next);
@@ -71,7 +71,7 @@ const getOneUserHistoryCommentHandler = async (req, res, next) => {
     }
 }
 
-const getAllUserHistoryUploadedFilesHandler = async (req, res, next) => {
+exports.getAllUserHistoryUploadedFilesHandler = async (req, res, next) => {
     const userId = req.params.userId;
     try {
         const files = await userService.getAllUserHistoryUploadedFilesService(userId, next);
@@ -85,7 +85,7 @@ const getAllUserHistoryUploadedFilesHandler = async (req, res, next) => {
     }
 }
 
-const getOneUserHistoryUploadedfileHandler = async (req, res, next) => {
+exports.getOneUserHistoryUploadedfileHandler = async (req, res, next) => {
     const { userId, attachmentId } = req.params;
     try {
         const file = await userService.getOneUserHistoryUploadedfileService(userId, attachmentId);
@@ -99,7 +99,7 @@ const getOneUserHistoryUploadedfileHandler = async (req, res, next) => {
     }
 }
 
-const getAllUserHistoryProjectsHandler = async (req, res, next) => {
+exports.getAllUserHistoryProjectsHandler = async (req, res, next) => {
     const userId = req.params.userId;
     try {
         const projects = await userService.getAllUserHistoryProjectsService(userId, next);
@@ -113,7 +113,7 @@ const getAllUserHistoryProjectsHandler = async (req, res, next) => {
     }
 }
 
-const getOneUserHistoryProjectHandler = async (req, res, next) => {
+exports.getOneUserHistoryProjectHandler = async (req, res, next) => {
     const { userId, projectId } = req.params;
     try {
         const project = await userService.getOneUserHistoryProjectService(userId, projectId, next);
@@ -127,7 +127,7 @@ const getOneUserHistoryProjectHandler = async (req, res, next) => {
     }
 }
 
-const getAllUserHistoryWorkgroupsHandler = async (req, res, next) => {
+exports.getAllUserHistoryWorkgroupsHandler = async (req, res, next) => {
     const userId = req.params.userId;
     try {
         const workgroups = await userService.getAllUserHistoryWorkgroupsService(userId, next);
@@ -141,7 +141,7 @@ const getAllUserHistoryWorkgroupsHandler = async (req, res, next) => {
     }
 }
 
-const getOneUserHistoryWorkgroupHandler = async (req, res, next) => {
+exports.getOneUserHistoryWorkgroupHandler = async (req, res, next) => {
     const { userId, workgroupId } = req.params;
     try {
         const workgroup = await userService.getOneUserHistoryWorkgroupService(userId, workgroupId, next);
@@ -155,7 +155,7 @@ const getOneUserHistoryWorkgroupHandler = async (req, res, next) => {
     }
 }
 
-const registerUserHandler = async (req, res, next) => {
+exports.registerUserHandler = async (req, res, next) => {
     const userSchema = req.body;
     const { username, email } = req.body;
     try {
@@ -175,7 +175,7 @@ const registerUserHandler = async (req, res, next) => {
     }
 }
 
-const loginUserHandler = async (req, res, next) => {
+exports.loginUserHandler = async (req, res, next) => {
     const sentUserCredentials = req.body;
     try {
         const errors = validationResult(req);
@@ -193,18 +193,18 @@ const loginUserHandler = async (req, res, next) => {
     }
 }
 
-module.exports = {
-    getOneUserHandler,
-    getAllUserNotificationsHandler,
-    getOneNotificationHandler,
-    getAllUserHistoryCommentsHandler,
-    getOneUserHistoryCommentHandler,
-    getAllUserHistoryUploadedFilesHandler,
-    getOneUserHistoryUploadedfileHandler,
-    getAllUserHistoryProjectsHandler,
-    getOneUserHistoryProjectHandler,
-    registerUserHandler,
-    loginUserHandler,
-    getAllUserHistoryWorkgroupsHandler,
-    getOneUserHistoryWorkgroupHandler
-}
+// module.exports = {
+//     getOneUserHandler,
+//     getAllUserNotificationsHandler,
+//     getOneNotificationHandler,
+//     getAllUserHistoryCommentsHandler,
+//     getOneUserHistoryCommentHandler,
+//     getAllUserHistoryUploadedFilesHandler,
+//     getOneUserHistoryUploadedfileHandler,
+//     getAllUserHistoryProjectsHandler,
+//     getOneUserHistoryProjectHandler,
+//     registerUserHandler,
+//     loginUserHandler,
+//     getAllUserHistoryWorkgroupsHandler,
+//     getOneUserHistoryWorkgroupHandler
+// }
