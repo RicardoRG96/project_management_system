@@ -4,7 +4,7 @@ const userRepository = require('./user-repository');
 const passwordHandler = require('./password-handlers/hash-password-handler');
 const SECRET_KEY = process.env.JWT_PASSWORD;
 
-const getUserByIdService = async (userId, next) => {
+exports.getUserByIdService = async (userId, next) => {
     try {
         const user = await userRepository.getUserByIdQuery(userId, next);
         return user;
@@ -14,7 +14,7 @@ const getUserByIdService = async (userId, next) => {
     }   
 }
 
-const getAllUserNotificationsService = async (userId, next) => {
+exports.getAllUserNotificationsService = async (userId, next) => {
     try {
         const notifications = await userRepository.getAllUserNotificationsQuery(userId, next);
         return notifications;
@@ -24,7 +24,7 @@ const getAllUserNotificationsService = async (userId, next) => {
     }
 }
 
-const getOneNotificationService = async (userId, notificationId, next) => {
+exports.getOneNotificationService = async (userId, notificationId, next) => {
     try {
         const notification = await userRepository.getOneNotificationQuery(userId, notificationId, next);
         return notification;
@@ -34,7 +34,7 @@ const getOneNotificationService = async (userId, notificationId, next) => {
     }
 }
 
-const getAllUserHistoryCommentsService = async (userId, next) => {
+exports.getAllUserHistoryCommentsService = async (userId, next) => {
     try {
         const comments = await userRepository.getAllUserHistoryCommentsQuery(userId, next);
         return comments;
@@ -44,7 +44,7 @@ const getAllUserHistoryCommentsService = async (userId, next) => {
     }
 }
 
-const getOneUserHistoryCommentService = async (userId, commentId, next) => {
+exports.getOneUserHistoryCommentService = async (userId, commentId, next) => {
     try {
         const comment = await userRepository.getOneUserHistoryCommentQuery(userId, commentId, next);
         return comment;
@@ -54,7 +54,7 @@ const getOneUserHistoryCommentService = async (userId, commentId, next) => {
     }
 }
 
-const getAllUserHistoryUploadedFilesService = async (userId, next) => {
+exports.getAllUserHistoryUploadedFilesService = async (userId, next) => {
     try {
         const files = await userRepository.getAllUserHistoryUploadedFilesQuery(userId, next);
         return files;
@@ -64,7 +64,7 @@ const getAllUserHistoryUploadedFilesService = async (userId, next) => {
     }
 }
 
-const getOneUserHistoryUploadedfileService = async (userId, attachmentId, next) => {
+exports.getOneUserHistoryUploadedfileService = async (userId, attachmentId, next) => {
     try {
         const file = await userRepository.getOneUserHistoryUploadedfileQuery(userId, attachmentId, next);
         return file;
@@ -74,7 +74,7 @@ const getOneUserHistoryUploadedfileService = async (userId, attachmentId, next) 
     }
 }
 
-const getAllUserHistoryProjectsService = async (userId, next) => {
+exports.getAllUserHistoryProjectsService = async (userId, next) => {
     try {
         const projects = await userRepository.getAllUserHistoryProjectsQuery(userId, next);
         return projects;
@@ -84,7 +84,7 @@ const getAllUserHistoryProjectsService = async (userId, next) => {
     }
 }
 
-const getOneUserHistoryProjectService = async (userId, projectId, next) => {
+exports.getOneUserHistoryProjectService = async (userId, projectId, next) => {
     try {
         const project = await userRepository.getOneUserHistoryProjectQuery(userId, projectId, next);
         return project;
@@ -94,7 +94,7 @@ const getOneUserHistoryProjectService = async (userId, projectId, next) => {
     }
 }
 
-const getAllUserHistoryWorkgroupsService = async (userId, next) => {
+exports.getAllUserHistoryWorkgroupsService = async (userId, next) => {
     try {
         const workgroups = await userRepository.getAllUserHistoryWorkgroupsQuery(userId, next);
         return workgroups;
@@ -104,7 +104,7 @@ const getAllUserHistoryWorkgroupsService = async (userId, next) => {
     }
 }
 
-const getOneUserHistoryWorkgroupService = async (userId, workgroupId, next) => {
+exports.getOneUserHistoryWorkgroupService = async (userId, workgroupId, next) => {
     try {
         const workgroup = await userRepository.getOneUserHistoryWorkgroupQuery(userId, workgroupId, next);
         return workgroup;
@@ -114,7 +114,7 @@ const getOneUserHistoryWorkgroupService = async (userId, workgroupId, next) => {
     }
 }
 
-const registerUserService = async (userSchema, next) => {
+exports.registerUserService = async (userSchema, next) => {
     const { username, email, password } = userSchema;
     try {
         const hashedPassword = await passwordHandler.hashPassword(password, next);
@@ -131,11 +131,11 @@ const registerUserService = async (userSchema, next) => {
     }
 }
 
-const loginUserService = async (sentUserCredentials, next) => {
+exports.loginUserService = async (sentUserCredentials, next) => {
     const { email } = sentUserCredentials;
     try {
         const storedUser = await userRepository.findUserQuery('', email, next);
-        const token = await createToken(sentUserCredentials, storedUser, next);
+        const token = await this.createToken(sentUserCredentials, storedUser, next);
         if (token) {
             return [
                 {
@@ -152,7 +152,7 @@ const loginUserService = async (sentUserCredentials, next) => {
     }
 }
 
-const findUserService = async (userName, email, next) => {
+exports.findUserService = async (userName, email, next) => {
     try {
         const user = await userRepository.findUserQuery(userName, email, next);
         if (user.length) {
@@ -165,12 +165,13 @@ const findUserService = async (userName, email, next) => {
     }
 }
 
-const createToken = async (sentUserCredentials, storedUserCredentials, next) => {
+exports.createToken = async (sentUserCredentials, storedUserCredentials, next) => {
     const storedEmail = storedUserCredentials[0].email;
     const storedPassword = storedUserCredentials[0].password;
     const sentEmail = sentUserCredentials.email;
     const sentPassword = sentUserCredentials.password;
     const userRole = storedUserCredentials[0].role;
+    console.log(storedEmail, storedPassword, sentEmail, sentPassword)
     try {
         const passwordValidation = await passwordHandler.compareSentPasswordWithPasswordStoredInDB(
             sentPassword, 
@@ -188,19 +189,19 @@ const createToken = async (sentUserCredentials, storedUserCredentials, next) => 
     }
 }
 
-module.exports = {
-    getUserByIdService,
-    getAllUserNotificationsService,
-    getOneNotificationService,
-    getAllUserHistoryCommentsService,
-    getOneUserHistoryCommentService,
-    getAllUserHistoryUploadedFilesService,
-    getOneUserHistoryUploadedfileService,
-    getAllUserHistoryProjectsService,
-    getOneUserHistoryProjectService,
-    registerUserService,
-    findUserService,
-    loginUserService,
-    getAllUserHistoryWorkgroupsService,
-    getOneUserHistoryWorkgroupService
-}
+// module.exports = {
+//     getUserByIdService,
+//     getAllUserNotificationsService,
+//     getOneNotificationService,
+//     getAllUserHistoryCommentsService,
+//     getOneUserHistoryCommentService,
+//     getAllUserHistoryUploadedFilesService,
+//     getOneUserHistoryUploadedfileService,
+//     getAllUserHistoryProjectsService,
+//     getOneUserHistoryProjectService,
+//     registerUserService,
+//     findUserService,
+//     loginUserService,
+//     getAllUserHistoryWorkgroupsService,
+//     getOneUserHistoryWorkgroupService
+// }
