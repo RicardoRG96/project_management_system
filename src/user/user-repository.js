@@ -140,6 +140,14 @@ exports.getAllUserHistoryTasksQuery = async (userId, next) => {
         .catch(err => next(err))
 }
 
+exports.getOneUserHistoryTasksQuery = async (userId, taskId, next) => {
+    const sql = `SELECT * FROM tasks WHERE assigned_to = ${userId} AND id = ${taskId}`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => next(err))
+}
+
 exports.registerUserQuery = async (userSchema, next) => {
     const keys = Object.keys(userSchema);
     const properties = keys.join(', ');

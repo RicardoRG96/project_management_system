@@ -124,6 +124,16 @@ exports.getAllUserHistoryTasksService = async (userId, next) => {
     }
 }
 
+exports.getOneUserHistoryTaskService = async (userId, taskId, next) => {
+    try {
+        const task = await userRepository.getOneUserHistoryTasksQuery(userId, taskId, next);
+        return task;
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
 exports.registerUserService = async (userSchema, next) => {
     const { username, email, password } = userSchema;
     try {
