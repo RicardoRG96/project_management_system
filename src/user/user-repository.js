@@ -165,7 +165,7 @@ exports.changeUserPermissions = async (userId, newRole) => {
     return db.any(sql)
         .then(result => result)
         .catch(err => { 
-            throw new Error(err)
+            throw new Error(err);
         })
 }
 
@@ -176,7 +176,7 @@ exports.createUserNotifications = async (userId) => {
     return db.any(sql)
         .then(result => result)
         .catch(err => { 
-            throw new Error(err)
+            throw new Error(err);
         })
 }
 
@@ -187,7 +187,7 @@ exports.createUserComment = async (userId) => {
     return db.any(sql)
         .then(result => result)
         .catch(err => { 
-            throw new Error(err)
+            throw new Error(err);
         })
 }
 
@@ -198,7 +198,7 @@ exports.createUserAttachment = async (userId) => {
     return db.any(sql)
         .then(result => result)
         .catch(err => { 
-            throw new Error(err)
+            throw new Error(err);
         })
 }
 
@@ -209,7 +209,7 @@ exports.createProjectMember = async (userId) => {
     return db.any(sql)
         .then(result => result)
         .catch(err => { 
-            throw new Error(err)
+            throw new Error(err);
         })
 }
 
@@ -219,6 +219,17 @@ exports.createWorkGroupMember = async (userId) => {
     return db.any(sql)
         .then(result => result)
         .catch(err => { 
-            throw new Error(err)
+            throw new Error(err);
+        })
+}
+
+exports.createTask = async (userId) => {
+    const sql = `INSERT INTO tasks (project_id, workgroup_id, title, description, status, assigned_to, due_date)
+        VALUES (1, 2, 'API Integration', 'Integrate external API with the backend system.', 'in_progress', ${userId}, '2024-07-25')`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => {
+            throw new Error(err);
         })
 }
