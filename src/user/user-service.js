@@ -134,6 +134,16 @@ exports.getOneUserHistoryTaskService = async (userId, taskId, next) => {
     }
 }
 
+exports.getAllUserCurrentlyAssignedTasksService = async (userId, next) => {
+    try {
+        const currentlyAssignedTasks = await userRepository.getAllUserCurrentlyAssignedTasksQuery(userId, next);
+        return currentlyAssignedTasks;
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
 exports.registerUserService = async (userSchema, next) => {
     const { username, email, password } = userSchema;
     try {

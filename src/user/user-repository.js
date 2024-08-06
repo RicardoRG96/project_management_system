@@ -9,7 +9,7 @@ exports.getUserByIdQuery = async (userId, next) => {
 
     return db.any(sql)
         .then(result => result)
-        .catch(err => next(err))
+        .catch(err => next(err));
 }
 
 exports.getAllUserNotificationsQuery = async (userId, next) => {
@@ -17,7 +17,7 @@ exports.getAllUserNotificationsQuery = async (userId, next) => {
 
     return db.any(sql)
         .then(result => result)
-        .catch(err => next(err))
+        .catch(err => next(err));
 }
 
 exports.getOneNotificationQuery = async (userId, notificationId, next) => {
@@ -25,7 +25,7 @@ exports.getOneNotificationQuery = async (userId, notificationId, next) => {
 
     return db.any(sql)
         .then(result => result)
-        .catch(err => next(err))
+        .catch(err => next(err));
 }
 
 exports.getAllUserHistoryCommentsQuery = async (userId, next) => {
@@ -33,7 +33,7 @@ exports.getAllUserHistoryCommentsQuery = async (userId, next) => {
 
     return db.any(sql)
         .then(result => result)
-        .catch(err => next(err))
+        .catch(err => next(err));
 }
 
 exports.getOneUserHistoryCommentQuery = async (userId, commentId, next) => {
@@ -41,7 +41,7 @@ exports.getOneUserHistoryCommentQuery = async (userId, commentId, next) => {
 
     return db.any(sql)
         .then(result => result)
-        .catch(err => next(err))
+        .catch(err => next(err));
 }
 
 exports.getAllUserHistoryUploadedFilesQuery = async (userId, next) => {
@@ -49,7 +49,7 @@ exports.getAllUserHistoryUploadedFilesQuery = async (userId, next) => {
 
     return db.any(sql)
         .then(result => result)
-        .catch(err => next(err))
+        .catch(err => next(err));
 }
 
 exports.getOneUserHistoryUploadedfileQuery = async (userId, attachmentId, next) => {
@@ -57,7 +57,7 @@ exports.getOneUserHistoryUploadedfileQuery = async (userId, attachmentId, next) 
 
     return db.any(sql)
         .then(result => result)
-        .catch(err => next(err))
+        .catch(err => next(err));
 }
 
 exports.getAllUserHistoryProjectsQuery = async (userId, next) => {
@@ -77,7 +77,7 @@ exports.getAllUserHistoryProjectsQuery = async (userId, next) => {
 
     return db.any(sql)
         .then(result => result)
-        .catch(err => next(err))
+        .catch(err => next(err));
 }
 
 exports.getOneUserHistoryProjectQuery = async (userId, projectId, next) => {
@@ -97,7 +97,7 @@ exports.getOneUserHistoryProjectQuery = async (userId, projectId, next) => {
 
     return db.any(sql)
         .then(result => result)
-        .catch(err => next(err))
+        .catch(err => next(err));
 }
 
 exports.getAllUserHistoryWorkgroupsQuery = async (userId, next) => {
@@ -113,7 +113,7 @@ exports.getAllUserHistoryWorkgroupsQuery = async (userId, next) => {
 
     return db.any(sql)
         .then(result => result)
-        .catch(err => next(err))
+        .catch(err => next(err));
 }
 
 exports.getOneUserHistoryWorkgroupQuery = async (userId, workgroupId, next) => {
@@ -129,7 +129,7 @@ exports.getOneUserHistoryWorkgroupQuery = async (userId, workgroupId, next) => {
 
     return db.any(sql)
         .then(result => result)
-        .catch(err => next(err))
+        .catch(err => next(err));
 }
 
 exports.getAllUserHistoryTasksQuery = async (userId, next) => {
@@ -137,7 +137,7 @@ exports.getAllUserHistoryTasksQuery = async (userId, next) => {
 
     return db.any(sql)
         .then(result => result)
-        .catch(err => next(err))
+        .catch(err => next(err));
 }
 
 exports.getOneUserHistoryTasksQuery = async (userId, taskId, next) => {
@@ -145,7 +145,15 @@ exports.getOneUserHistoryTasksQuery = async (userId, taskId, next) => {
 
     return db.any(sql)
         .then(result => result)
-        .catch(err => next(err))
+        .catch(err => next(err));
+}
+
+exports.getAllUserCurrentlyAssignedTasksQuery = async (userId, next) => {
+    const sql = `SELECT * FROM tasks WHERE assigned_to = ${userId} AND status = 'in_progress'`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => next(err));
 }
 
 exports.registerUserQuery = async (userSchema, next) => {
