@@ -651,6 +651,72 @@ router.get(
     userHandler.getOneUserHistoryWorkgroupHandler
 );
 
+/**
+ * @openapi
+ * /api/v1.0/user/{userId}/history/tasks:
+ *  get:
+ *     tags:
+ *     - User Handlers
+ *     summary: Get all tasks that have been assigned to the user
+ *     parameters:
+ *      - name: userId
+ *        in: path
+ *        description: The id of the user
+ *        required: true
+ *     responses:
+ *      200:    
+ *        description: OK
+ *        content:
+ *           application/json:
+ *               schema:
+ *                   type: object
+ *                   properties: 
+ *                       id:
+ *                          type: number
+ *                          example: 10
+ *                       project_id:
+ *                          type: number
+ *                          example: 5
+ *                       workgroup_id: 
+ *                          type: number
+ *                          example: 15.
+ *                       title:
+ *                          type: string
+ *                          example: API integration
+ *                       description:
+ *                          type: string
+ *                          example: Integrate the external API with the backend system.
+ *                       status:
+ *                          type: string
+ *                          example: in_progress
+ *                       assigned_to:
+ *                          type: number
+ *                          example: 18
+ *                       due_date:
+ *                          type: string
+ *                          example: 2024-07-25T23:45:55.006Z
+ *                       created_at:
+ *                          type: string
+ *                          example: 2024-07-25T23:45:55.006Z
+ *                       updated_at:
+ *                          type: string
+ *                          example: 2024-07-25T23:45:55.006Z
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.get(
+    '/:userId/history/tasks',
+    verifyToken,
+    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TEAM_MEMBER, ROLES.TECHNICAL_LEADER]),
+    userHandler.getAllUserHistoryTasksHandler
+);
+
 /** POST Methods */
 
 /**

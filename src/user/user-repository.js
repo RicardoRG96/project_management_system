@@ -132,6 +132,14 @@ exports.getOneUserHistoryWorkgroupQuery = async (userId, workgroupId, next) => {
         .catch(err => next(err))
 }
 
+exports.getAllUserHistoryTasksQuery = async (userId, next) => {
+    const sql = `SELECT * FROM tasks WHERE assigned_to = ${userId}`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => next(err))
+}
+
 exports.registerUserQuery = async (userSchema, next) => {
     const keys = Object.keys(userSchema);
     const properties = keys.join(', ');

@@ -155,6 +155,20 @@ exports.getOneUserHistoryWorkgroupHandler = async (req, res, next) => {
     }
 }
 
+exports.getAllUserHistoryTasksHandler = async (req, res, next) => {
+    const userId = req.params.userId;
+    try {
+        const tasks = await userService.getAllUserHistoryTasksService(userId, next);
+        if (!tasks.length) {
+            return res.sendStatus(404);
+        }
+        return res.status(200).json(tasks);
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
 exports.registerUserHandler = async (req, res, next) => {
     const userSchema = req.body;
     const { username, email } = req.body;
@@ -192,19 +206,3 @@ exports.loginUserHandler = async (req, res, next) => {
         return next(err);
     }
 }
-
-// module.exports = {
-//     getOneUserHandler,
-//     getAllUserNotificationsHandler,
-//     getOneNotificationHandler,
-//     getAllUserHistoryCommentsHandler,
-//     getOneUserHistoryCommentHandler,
-//     getAllUserHistoryUploadedFilesHandler,
-//     getOneUserHistoryUploadedfileHandler,
-//     getAllUserHistoryProjectsHandler,
-//     getOneUserHistoryProjectHandler,
-//     registerUserHandler,
-//     loginUserHandler,
-//     getAllUserHistoryWorkgroupsHandler,
-//     getOneUserHistoryWorkgroupHandler
-// }

@@ -114,6 +114,16 @@ exports.getOneUserHistoryWorkgroupService = async (userId, workgroupId, next) =>
     }
 }
 
+exports.getAllUserHistoryTasksService = async (userId, next) => {
+    try {
+        const tasks = await userRepository.getAllUserHistoryTasksQuery(userId, next);
+        return tasks;
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
 exports.registerUserService = async (userSchema, next) => {
     const { username, email, password } = userSchema;
     try {
@@ -171,7 +181,6 @@ exports.createToken = async (sentUserCredentials, storedUserCredentials, next) =
     const sentEmail = sentUserCredentials.email;
     const sentPassword = sentUserCredentials.password;
     const userRole = storedUserCredentials[0].role;
-    console.log(storedEmail, storedPassword, sentEmail, sentPassword)
     try {
         const passwordValidation = await passwordHandler.compareSentPasswordWithPasswordStoredInDB(
             sentPassword, 
@@ -188,20 +197,3 @@ exports.createToken = async (sentUserCredentials, storedUserCredentials, next) =
         return next(err);
     }
 }
-
-// module.exports = {
-//     getUserByIdService,
-//     getAllUserNotificationsService,
-//     getOneNotificationService,
-//     getAllUserHistoryCommentsService,
-//     getOneUserHistoryCommentService,
-//     getAllUserHistoryUploadedFilesService,
-//     getOneUserHistoryUploadedfileService,
-//     getAllUserHistoryProjectsService,
-//     getOneUserHistoryProjectService,
-//     registerUserService,
-//     findUserService,
-//     loginUserService,
-//     getAllUserHistoryWorkgroupsService,
-//     getOneUserHistoryWorkgroupService
-// }
