@@ -4,8 +4,6 @@ const path = require('node:path');
 const { db, pgp } = require('../../db/config');
 const app = require('../../app');
 const userRepository = require('./user-repository');
-const exp = require('node:constants');
-const { register } = require('node:module');
 
 describe('User API endpoints', () => {
     const mockUserId = 4;
@@ -83,6 +81,19 @@ describe('User API endpoints', () => {
         password: "node123456"
     }
     const mockInvalidtoken = 'sadadjsdnllasndnaowqrfjcnl';
+
+    const mockValidUpdateEmailRequest = {
+        userId: mockUserId,
+        email: mockValidUserRegisterSchema.email
+    }
+    const mockInvalidUpdateEmailRequest = {
+        userId: mockInvalidUserId,
+        email: mockInvalidUserCredentials.email
+    }
+    const mockNotMatchingUpdateEmailRequest = {
+        userId: mockNotExistingUserId,
+        email: mockValidUserRegisterSchema.email
+    }
 
     const registerUser = async (userFixture) => {
         return request(app)
@@ -2137,6 +2148,98 @@ describe('User API endpoints', () => {
 
                 expect(registerUserTest.status).toBe(201);
                 expect(loginUserTest.status).toBe(401);
+            }
+        );
+    });
+
+    describe('PATCH /api/v1.0/user/update-email', () => {
+        it('Should respond with a status 204 if the email update is successful', 
+            async () => {
+                const endpoint = `/api/v1.0/user/update-email`;
+
+                await registerUser(mockValidUserRegisterSchema);
+                await mockChangeUserRole(mockUserId, 'team_member');
+                const loginUserTest = await loginUser(mockValidUserCredentials);
+                const token = loginUserTest.body[0].token;
+
+                const response = await request(app)
+                    .patch(endpoint)
+                    .send(mockValidUpdateEmailRequest)
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(204);
+            }
+        );
+
+        it('Should respond with a status 304 if email was not updated', 
+            async () => {
+                const endpoint = `/api/v1.0/user/update-email`;
+
+                await registerUser(mockValidUserRegisterSchema);
+                await mockChangeUserRole(mockUserId, 'team_member');
+                const loginUserTest = await loginUser(mockValidUserCredentials);
+                const token = loginUserTest.body[0].token;
+
+                const response = await request(app)
+                    .patch(endpoint)
+                    .send(mockNotMatchingUpdateEmailRequest)
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(304);
+            }
+        );
+
+        it('Should respond with a status 400 if invalid data are sent', 
+            async () => {
+                const endpoint = `/api/v1.0/user/update-email`;
+
+                await registerUser(mockValidUserRegisterSchema);
+                await mockChangeUserRole(mockUserId, 'team_member');
+                const loginUserTest = await loginUser(mockValidUserCredentials);
+                const token = loginUserTest.body[0].token;
+
+                const response = await request(app)
+                    .patch(endpoint)
+                    .send(mockInvalidUpdateEmailRequest)
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(400);
+            }
+        );
+
+        it('Should respond with a status 401 if no token is provided', async () => {
+            const endpoint = `/api/v1.0/user/update-email`;
+            const response = await request(app)
+                .patch(endpoint)
+                .send(mockValidUpdateEmailRequest);
+
+            expect(response.status).toBe(401);
+        });
+
+        it('Should respond with a status 403 if token is invalid', async () => {
+            const endpoint = `/api/v1.0/user/update-email`;
+            const response = await request(app)
+                .patch(endpoint)
+                .send(mockValidUpdateEmailRequest)
+                .set('Authorization', `Bearer ${mockInvalidtoken}`);
+
+            expect(response.status).toBe(403);
+        });
+
+        it('Should respond with a status 403 if user has not permissions', 
+            async () => {
+                const endpoint = `/api/v1.0/user/update-email`;
+
+                await registerUser(mockValidUserRegisterSchema);
+                const loginUserTest = await loginUser(mockValidUserCredentials);
+                const token = loginUserTest.body[0].token;
+
+                const response = await request(app)
+                    .patch(endpoint)
+                    .send(mockValidUpdateEmailRequest)
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(403);
             }
         );
     });

@@ -252,11 +252,15 @@ exports.loginUserHandler = async (req, res, next) => {
 exports.updateUserEmailHandler = async (req, res, next) => {
     const { userId, email } = req.body;
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
         const updatedEmail = await userService.updateUserEmailService(userId, email, next);
         if (!updatedEmail.length) {
-            return res.sendStatus(404);
+            return res.sendStatus(304);
         }
-        return res.status(200).json(updatedEmail);
+        return res.sendStatus(204);
     }
     catch (err) {
         return next(err);

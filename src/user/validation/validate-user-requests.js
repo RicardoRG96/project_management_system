@@ -1,6 +1,6 @@
 const { body } = require('express-validator');
 
-exports.validateRegisterRequest = ()  => {
+exports.validateRegisterRequest = () => {
     return [
         body('username').notEmpty().trim().escape(),
         body('email').isEmail().escape().notEmpty(),

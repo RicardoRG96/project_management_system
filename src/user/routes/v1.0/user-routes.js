@@ -1055,32 +1055,22 @@ router.post(
  *                type: string
  *                example: example@mail.com 
  *     responses:
- *      200:
- *        description: OK
- *        content:
- *          application/json:
- *             schema:
- *                properties:
- *                  id:
- *                      type: number
- *                      example: 54 
- *                  email:
- *                      type: string
- *                      example: johndoe@mail.com
+ *      204:
+ *        description: No Content
+ *      304:
+ *        description: Not Modified
  *      400:
  *        description: Bad request
  *      401:
  *        description: Unauthorized
  *      403:
  *        description: Forbidden
- *      404:
- *        description: Not Found
  */
 router.patch(
     '/update-email',
+    validate.validateEmailUpdateRequest(),
     verifyToken,
     hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TECHNICAL_LEADER, ROLES.TEAM_MEMBER]),
-    validate.validateEmailUpdateRequest(), 
     userHandler.updateUserEmailHandler
 );
 
