@@ -248,3 +248,17 @@ exports.loginUserHandler = async (req, res, next) => {
         return next(err);
     }
 }
+
+exports.updateUserEmailHandler = async (req, res, next) => {
+    const { userId, email } = req.body;
+    try {
+        const updatedEmail = await userService.updateUserEmailService(userId, email, next);
+        if (!updatedEmail.length) {
+            return res.sendStatus(404);
+        }
+        return res.status(200).json(updatedEmail);
+    }
+    catch (err) {
+        return next(err);
+    }
+}

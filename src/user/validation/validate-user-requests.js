@@ -1,6 +1,6 @@
 const { body } = require('express-validator');
 
-const validateRegisterRequest = ()  => {
+exports.validateRegisterRequest = ()  => {
     return [
         body('username').notEmpty().trim().escape(),
         body('email').isEmail().escape().notEmpty(),
@@ -8,14 +8,16 @@ const validateRegisterRequest = ()  => {
     ]
 }
 
-const validateLoginRequest = () => {
+exports.validateLoginRequest = () => {
     return [
         body('email').isEmail().notEmpty(),
         body('password').isLength({ min: 8 }).notEmpty().escape()
     ]
 }
 
-module.exports = {
-    validateRegisterRequest,
-    validateLoginRequest
+exports.validateEmailUpdateRequest = () => {
+    return [
+        body('userId').isInt().escape().notEmpty(),
+        body('email').isEmail().escape().notEmpty()
+    ]
 }

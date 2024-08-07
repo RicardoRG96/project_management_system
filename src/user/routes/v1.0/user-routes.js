@@ -1030,4 +1030,58 @@ router.post(
     userHandler.loginUserHandler
 );
 
+/** PATCH Methods */
+
+/**
+ * @openapi
+ * '/api/v1.0/user/update-email':
+ *  patch:
+ *     tags:
+ *     - User Handlers
+ *     summary: Update the user's email
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - email
+ *            properties:
+ *              userId:
+ *                type: number
+ *                example: 25
+ *              email:
+ *                type: string
+ *                example: example@mail.com 
+ *     responses:
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *             schema:
+ *                properties:
+ *                  id:
+ *                      type: number
+ *                      example: 54 
+ *                  email:
+ *                      type: string
+ *                      example: johndoe@mail.com
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
+ *      404:
+ *        description: Not Found
+ */
+router.patch(
+    '/update-email',
+    verifyToken,
+    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TECHNICAL_LEADER, ROLES.TEAM_MEMBER]),
+    validate.validateEmailUpdateRequest(), 
+    userHandler.updateUserEmailHandler
+);
+
 module.exports = router;

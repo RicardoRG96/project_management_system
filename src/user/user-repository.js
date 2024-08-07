@@ -185,8 +185,16 @@ exports.findUserQuery = async (userName, email, next) => {
         .catch(err => next(err))
 }
 
+exports.updateUserEmailQuery = async (userId, newEmail, next) => {
+    const sql = `UPDATE users SET email = '${newEmail}' WHERE id = ${userId} RETURNING id, email`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => next(err));
+}
+
 exports.changeUserPermissions = async (userId, newRole) => {
-    const sql = `UPDATE users SET role = '${newRole}' WHERE id = ${userId} RETURNING *`;
+    const sql = `UPDATE users SET role = '${newRole}' WHERE id = ${userId} RETURNING id, role`;
 
     return db.any(sql)
         .then(result => result)

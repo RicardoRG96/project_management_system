@@ -227,3 +227,13 @@ exports.createToken = async (sentUserCredentials, storedUserCredentials, next) =
         return next(err);
     }
 }
+
+exports.updateUserEmailService = async (userId, newEmail, next) => {
+    try {
+        const updatedEmail = await userRepository.updateUserEmailQuery(userId, newEmail, next);
+        return updatedEmail;
+    }
+    catch (err) {
+        return next(err);
+    }
+}
