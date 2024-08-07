@@ -197,6 +197,20 @@ exports.getAllUserCurrentlyAssignedTasksHandler = async (req, res, next) => {
     }
 }
 
+exports.getOneUserCurrentlyAssignedTaskHandler = async (req, res, next) => {
+    const { userId, taskId } = req.params;
+    try {
+        const currentlyAssignedTask = await userService.getOneUserCurrentlyAssignedTaskService(userId, taskId, next);
+        if (!currentlyAssignedTask.length) {
+            return res.sendStatus(404);
+        }
+        return res.status(200).json(currentlyAssignedTask);
+    }
+    catch (err) {
+        return next(err);
+    }
+}
+
 exports.registerUserHandler = async (req, res, next) => {
     const userSchema = req.body;
     const { username, email } = req.body;
