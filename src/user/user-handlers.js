@@ -275,6 +275,9 @@ exports.updateUserPasswordHandler = async (req, res, next) => {
             return res.status(400).json({ errors: errors.array() });
         }
         const updatedPassword = await userService.updateUserPasswordService(userData, next);
+        if (updatedPassword === null) {
+            return res.status(404).json({ message: 'Username does not exist' });
+        }
         if (!updatedPassword.length) {
             return res.sendStatus(304);
         }

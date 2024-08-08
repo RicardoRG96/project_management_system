@@ -239,9 +239,12 @@ exports.updateUserEmailService = async (userId, newEmail, next) => {
 }
 
 exports.updateUserPasswordService = async (userData, next) => {
-    const { username, currentPassword, newPassword } = userData;
+    const { username, currentPassword, newPassword } =  userData;
     try {
         const storedUserCredentials = await userRepository.findUserQuery(username, '', next);
+        if (!storedUserCredentials.length) {
+            return null;
+        }
         const storedPassword = storedUserCredentials[0].password;
         const passwordValidation = await passwordHandler.compareSentPasswordWithPasswordStoredInDB(
             currentPassword,

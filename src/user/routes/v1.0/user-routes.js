@@ -1113,6 +1113,8 @@ router.patch(
  *        description: Unauthorized
  *      403:
  *        description: Forbidden
+ *      404:
+ *        description: Not Found
  */
 router.patch(
     '/update-password',
