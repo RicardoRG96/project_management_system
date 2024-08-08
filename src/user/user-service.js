@@ -237,3 +237,24 @@ exports.updateUserEmailService = async (userId, newEmail, next) => {
         return next(err);
     }
 }
+
+exports.updateUserPasswordService = async (userData, next) => {
+    const { username, currentPassword, newPassword } = userData;
+    try {
+        const storedUserCredentials = await userRepository.findUserQuery(username, '', next);
+        const storedPassword = storedUserCredentials[0].password;
+        const passwordValidation = await passwordHandler.compareSentPasswordWithPasswordStoredInDB(
+            currentPassword,
+            storedPassword
+        );
+        if (!passwordValidation) {
+            return [];
+        }
+        const hashNewPassword = await passwordHandler.hashPassword(newPassword, next);
+        const updatedPassword = await userRepository.updateUserPasswordQuery(username, hashNewPassword, next);
+        return updatedPassword;
+    }
+    catch (err) {
+        return next(err);
+    }
+}

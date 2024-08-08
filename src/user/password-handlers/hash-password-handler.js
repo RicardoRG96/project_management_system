@@ -1,14 +1,14 @@
 const bcrypt = require('bcrypt');
 
-const hashPassword = async (password, next) => {
-    const salt = await generateSalt(next);
+exports.hashPassword = async (password, next) => {
+    const salt = await this.generateSalt(next);
 
     return bcrypt.hash(password, salt)
         .then(hashedPassword => hashedPassword)
         .catch(err => next(err))
 } 
 
-const generateSalt = async (next) => {
+exports.generateSalt = async (next) => {
     const saltRounds = 10;
     
     return bcrypt.genSalt(saltRounds)
@@ -16,15 +16,9 @@ const generateSalt = async (next) => {
         .catch(err => next(err))
 }
 
-const compareSentPasswordWithPasswordStoredInDB = async (sentPassword, storedPassword, next) => {
+exports.compareSentPasswordWithPasswordStoredInDB = async (sentPassword, storedPassword, next) => {
 
     return bcrypt.compare(sentPassword, storedPassword)
         .then(matchPassword => matchPassword)
         .catch(err => next(err))
-}
-
-module.exports = {
-    generateSalt,
-    hashPassword,
-    compareSentPasswordWithPasswordStoredInDB
 }

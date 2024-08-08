@@ -1046,6 +1046,7 @@ router.post(
  *           schema:
  *            type: object
  *            required:
+ *              - userId
  *              - email
  *            properties:
  *              userId:
@@ -1073,5 +1074,53 @@ router.patch(
     hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TECHNICAL_LEADER, ROLES.TEAM_MEMBER]),
     userHandler.updateUserEmailHandler
 );
+
+/**
+ * @openapi
+ * '/api/v1.0/user/update-password':
+ *  patch:
+ *     tags:
+ *     - User Handlers
+ *     summary: Update the user's password
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - username
+ *              - currentPassword
+ *              - newPassword
+ *            properties:
+ *              username:
+ *                type: string
+ *                example: johndoe
+ *              currentPassword:
+ *                type: string
+ *                example: admin.1234
+ *              newPassword:
+ *                type: string
+ *                example: admin-01.5 
+ *     responses:
+ *      204:
+ *        description: No Content
+ *      304:
+ *        description: Not Modified
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
+ */
+router.patch(
+    '/update-password',
+    validate.validatePasswordUpdateRequest(),
+    verifyToken,
+    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TECHNICAL_LEADER, ROLES.TEAM_MEMBER]),
+    userHandler.updateUserPasswordHandler
+);
+
 
 module.exports = router;

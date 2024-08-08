@@ -193,6 +193,14 @@ exports.updateUserEmailQuery = async (userId, newEmail, next) => {
         .catch(err => next(err));
 }
 
+exports.updateUserPasswordQuery = async (username, newPassword, next) => {
+    const sql = `UPDATE users SET password = '${newPassword}' WHERE username = '${username}' RETURNING id, password`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => next(err));
+}
+
 exports.changeUserPermissions = async (userId, newRole) => {
     const sql = `UPDATE users SET role = '${newRole}' WHERE id = ${userId} RETURNING id, role`;
 
