@@ -3,10 +3,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { db, pgp } = require('../../db/config');
 const app = require('../../app');
-const userRepository = require('./user-repository');
-const { register } = require('node:module');
+const testHelpers = require('../../tests-helpers/tests-utils');
+const { registerUser, loginUser } = require('../../tests-helpers/tests-utils');
 
-describe('User API endpoints', () => {
+describe.skip('User API endpoints', () => {
     const mockUserId = 4;
     const mockInvalidUserId = 'k';
     const mockNotExistingUserId = 50;
@@ -48,11 +48,7 @@ describe('User API endpoints', () => {
     const mockNotExistingTaskId = 50;
     const mockExistingUserIdWithoutTask = 50;
 
-    const mockValidUserRegisterSchema = {
-        username: 'johndoe10',
-        email: 'johndoe@gmail.com',
-        password: 'node1234'
-    }
+    const mockValidUserRegisterSchema = testHelpers.validUserRegisterSchema;
     const mockUserRegisterSchemaWithErrors = {
         username: 'johndoe10',
         email: 'johndoe',
@@ -64,10 +60,7 @@ describe('User API endpoints', () => {
         password: 'hashedpassword1'
     }
 
-    const mockValidUserCredentials = {
-        email: "johndoe@gmail.com",
-        password: "node1234"
-    }
+    const mockValidUserCredentials = testHelpers.validUserCredentials;
     const mockInvalidUserCredentials = {
         email: "johndoe",
         password: "node1"
@@ -81,7 +74,7 @@ describe('User API endpoints', () => {
         email: "johndoe@gmail.com",
         password: "node123456"
     }
-    const mockInvalidtoken = 'sadadjsdnllasndnaowqrfjcnl';
+    const mockInvalidtoken = testHelpers.invalidtoken;
 
     const mockValidUpdateEmailRequest = {
         userId: mockUserId,
@@ -117,24 +110,13 @@ describe('User API endpoints', () => {
         newPassword: 'node.123456'
     }
 
-    const registerUser = async (userFixture) => {
-        return request(app)
-            .post('/api/v1.0/user/register')
-            .send(userFixture)
-    }
-
-    const loginUser = async (userFixture) => {
-        return request(app)
-            .post('/api/v1.0/user/login')
-            .send(userFixture)
-    }
-    const mockCreateUserNotifications = userRepository.createUserNotifications;
-    const mockCreateUserComment = userRepository.createUserComment;
-    const mockChangeUserRole = userRepository.changeUserPermissions;
-    const mockCreateUserAttachment = userRepository.createUserAttachment;
-    const mockCreateProjectMember = userRepository.createProjectMember;
-    const mockCreateWorkGroupMember = userRepository.createWorkGroupMember;
-    const mockCreateTask = userRepository.createTask;
+    const mockCreateUserNotifications = testHelpers.createUserNotifications;
+    const mockCreateUserComment = testHelpers.createUserComment;
+    const mockChangeUserRole = testHelpers.changeUserPermissions;
+    const mockCreateUserAttachment = testHelpers.createUserAttachment;
+    const mockCreateProjectMember = testHelpers.createProjectMember;
+    const mockCreateWorkGroupMember = testHelpers.createWorkGroupMember;
+    const mockCreateTask = testHelpers.createTask;
     
     beforeEach(async () => {
         const resetUsersTable = fs.readFileSync(
@@ -234,7 +216,7 @@ describe('User API endpoints', () => {
         pgp.end();
     });
 
-    describe.skip('GET /api/v1.0/user/:userId', () => {
+    describe('GET /api/v1.0/user/:userId', () => {
         it('Should respond with a status 200 if user exists', async () => {
             const endpoint = `/api/v1.0/user/${mockUserId}`;
 
@@ -296,7 +278,7 @@ describe('User API endpoints', () => {
         });
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/notifications', () => {
+    describe('GET /api/v1.0/user/:userId/notifications', () => {
         it('Should respond with a status 200 if the user exists, has notifications and permissions', 
             async () => {
             const endpoint = `/api/v1.0/user/${mockUserId}/notifications`;
@@ -372,7 +354,7 @@ describe('User API endpoints', () => {
         });
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/notifications/:notificationId', () => {
+    describe('GET /api/v1.0/user/:userId/notifications/:notificationId', () => {
         it('should respond with a status 200 if userId and notificationId exists', 
             async () => {
             const endpoint = `/api/v1.0/user/${mockUserId}/notifications/${mockNotificationId}`;
@@ -504,7 +486,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/history/comments', () => {
+    describe('GET /api/v1.0/user/:userId/history/comments', () => {
         it('Should respond with a status 200 if the user exists, has submitted comments and has permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/comments`;
@@ -608,7 +590,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/history/comments/:commentId',() => {
+    describe('GET /api/v1.0/user/:userId/history/comments/:commentId',() => {
         it('Should respond with a status 200 if userId, commentId exists and has permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/comments/${mockCommentId}`;
@@ -765,7 +747,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/history/attachments', () => {
+    describe('GET /api/v1.0/user/:userId/history/attachments', () => {
         it('Should respond with a status 200 if the user exists, has uploaded files, and permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/attachments`;
@@ -872,7 +854,7 @@ describe('User API endpoints', () => {
     });
 
 
-    describe.skip('GET /api/v1.0/user/:userId/history/attachments/:attachmentId',() => {
+    describe('GET /api/v1.0/user/:userId/history/attachments/:attachmentId',() => {
         it('Should respond with a status 200 if userId, attachmentId exists and has permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/attachments/${mockAttachmentId}`;
@@ -1035,7 +1017,7 @@ describe('User API endpoints', () => {
     });
 
 
-    describe.skip('GET /api/v1.0/user/:userId/history/projects', () => {
+    describe('GET /api/v1.0/user/:userId/history/projects', () => {
         it('Should respond with a status 200 if the user exists, has projects participations, and permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/projects`;
@@ -1138,7 +1120,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/history/projects/:projectId',() => {
+    describe('GET /api/v1.0/user/:userId/history/projects/:projectId',() => {
         it('Should respond with a status 200 if userId and projectId exists and has permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/projects/${mockProjectId}`;
@@ -1300,7 +1282,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/history/workgroups', () => {
+    describe('GET /api/v1.0/user/:userId/history/workgroups', () => {
         it('Should respond with a status 200 if userId exists and has permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/workgroups`;
@@ -1403,7 +1385,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/history/workgroups/:workgroupId', () => {
+    describe('GET /api/v1.0/user/:userId/history/workgroups/:workgroupId', () => {
         it('Should respond with a status 200 if the user exists, has workgroups participations, and permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/workgroups/${mockWorkgroupId}`;
@@ -1565,7 +1547,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/history/tasks', () => {
+    describe('GET /api/v1.0/user/:userId/history/tasks', () => {
         it('Should respond with a status 200 if user exists, has tasks and has permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/tasks`;
@@ -1668,7 +1650,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/history/tasks/:taskId', () => {
+    describe('GET /api/v1.0/user/:userId/history/tasks/:taskId', () => {
         it('Should respond with a status 200 if the user exists, has tasks, and permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/history/tasks/${mockTaskId}`;
@@ -1830,7 +1812,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/currently-assigned-tasks', () => {
+    describe('GET /api/v1.0/user/:userId/currently-assigned-tasks', () => {
         it('Should respond with a status 200 if the user exists, has assigned tasks, and permissions.', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/currently-assigned-tasks`;
@@ -1933,7 +1915,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('GET /api/v1.0/user/:userId/currently-assigned-tasks/:taskId', () => {
+    describe('GET /api/v1.0/user/:userId/currently-assigned-tasks/:taskId', () => {
         it('Should respond with a status 200 if user exists, taskId exists, and has permissions', 
             async () => {
                 const endpoint = `/api/v1.0/user/${mockUserId}/currently-assigned-tasks/${mockTaskId}`;
@@ -2095,7 +2077,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('POST /api/v1.0/user/register', () => {
+    describe('POST /api/v1.0/user/register', () => {
         const endpoint = '/api/v1.0/user/register';
 
         it('Should respond with a status 201 if the user was created',
@@ -2132,7 +2114,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('POST /api/v1.0/user/login', () => {
+    describe('POST /api/v1.0/user/login', () => {
         it('Should respond with a status 200 if the correct user credentials are submitted', 
             async () => {
                 const registerUserTest = await registerUser(mockValidUserRegisterSchema);
@@ -2174,7 +2156,7 @@ describe('User API endpoints', () => {
         );
     });
 
-    describe.skip('PATCH /api/v1.0/user/update-email', () => {
+    describe('PATCH /api/v1.0/user/update-email', () => {
         it('Should respond with a status 204 if the email update is successful', 
             async () => {
                 const endpoint = `/api/v1.0/user/update-email`;

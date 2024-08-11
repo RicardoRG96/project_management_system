@@ -175,6 +175,9 @@ exports.loginUserService = async (sentUserCredentials, next) => {
     const { email } = sentUserCredentials;
     try {
         const storedUser = await userRepository.findUserQuery('', email, next);
+        if (!storedUser.length) {
+            return null;
+        }
         const token = await this.createToken(sentUserCredentials, storedUser, next);
         if (token) {
             return [
