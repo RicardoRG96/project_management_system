@@ -6,5 +6,5 @@ exports.createNotificationQuery = async (userId, message, next) => {
 
     return db.any(sql)
         .then(result => result)
-        .catch(err => next(err))
+        .catch(err => next(err));
 }

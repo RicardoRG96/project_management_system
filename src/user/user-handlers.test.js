@@ -1,12 +1,10 @@
 const request = require('supertest');
-const fs = require('node:fs');
-const path = require('node:path');
-const { db, pgp } = require('../../db/config');
+const { pgp } = require('../../db/config');
 const app = require('../../app');
 const testHelpers = require('../../tests-helpers/tests-utils');
 const { registerUser, loginUser } = require('../../tests-helpers/tests-utils');
 
-describe.skip('User API endpoints', () => {
+describe('User API endpoints', () => {
     const mockUserId = 4;
     const mockInvalidUserId = 'k';
     const mockNotExistingUserId = 50;
@@ -119,97 +117,8 @@ describe.skip('User API endpoints', () => {
     const mockCreateTask = testHelpers.createTask;
     
     beforeEach(async () => {
-        const resetUsersTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/reset/reset_users.sql')
-        ).toString();
-
-        const seedUsersTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/seed/seed_users.sql')
-        ).toString();
-
-        const resetNotificationsTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/reset/reset_notifications.sql')
-        ).toString();
-
-        const seedNotificationsTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/seed/seed_notifications.sql')
-        ).toString();
-
-        const resetProjectsTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/reset/reset_projects.sql')
-        ).toString();
-
-        const seedProjectsTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/seed/seed_projects.sql')
-        ).toString();
-
-        const resetWorkgroupsTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/reset/reset_workgroups.sql')
-        ).toString();
-
-        const seedWorkgroupsTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/seed/seed_workgroups.sql')
-        ).toString();
-
-        const resetTasksTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/reset/reset_tasks.sql')
-        ).toString();
-
-        const seedTasksTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/seed/seed_tasks.sql')
-        ).toString();
-
-        const resetCommentsTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/reset/reset_comments.sql')
-        ).toString();
-
-        const seedCommentsTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/seed/seed_comments.sql')
-        ).toString();
-
-        const resetAttachmentsTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/reset/reset_attachments.sql')
-        ).toString();
-
-        const seedAttachmentsTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/seed/seed_attachments.sql')
-        ).toString();
-
-        const resetProjectMembersTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/reset/reset_projectMembers.sql')
-        ).toString();
-
-        const seedProjectMembersTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/seed/seed_projectMembers.sql')
-        ).toString();
-
-        const resetWorkgroupMembersTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/reset/reset_workgroupmembers.sql')
-        ).toString();
-
-        const seedWorkgroupMembersTable = fs.readFileSync(
-            path.join(__dirname, '../../scripts/seed/seed_workgroupmembers.sql')
-        ).toString();
-
-        await db.none(resetUsersTable);
-        await db.none(resetNotificationsTable);
-        await db.none(resetProjectsTable);
-        await db.none(resetWorkgroupsTable);
-        await db.none(resetTasksTable);
-        await db.none(resetCommentsTable);
-        await db.none(resetAttachmentsTable);
-        await db.none(resetProjectMembersTable);
-        await db.none(resetWorkgroupMembersTable);
-
-        await db.none(seedUsersTable);
-        await db.none(seedNotificationsTable);
-        await db.none(seedProjectsTable);
-        await db.none(seedWorkgroupsTable);
-        await db.none(seedTasksTable);
-        await db.none(seedCommentsTable);
-        await db.none(seedAttachmentsTable);
-        await db.none(seedProjectMembersTable);
-        await db.none(seedWorkgroupMembersTable);
+        await testHelpers.resetDataBaseTables();
+        await testHelpers.seedDataBaseTables();
     });
 
     afterAll(async () => {
