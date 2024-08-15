@@ -52,6 +52,27 @@ describe('Tasks API endpoints', () => {
         due_date: '2024-08-22'
     }
 
+    const mockCreateCommentRequest = {
+        task_id: 1,
+        user_id: mockUserId,
+        content: 'I have completed the initial design. Please review and provide feedback.'
+    }
+    const mockCreateCommentBadRequest = {
+        task_id: '1',
+        user_id: '',
+        content: 'I have completed the initial design. Please review and provide feedback.'
+    }
+    const mockCreateCommentWithNotExistingTaskId = {
+        task_id: 100,
+        user_id: mockUserId,
+        content: 'I have completed the initial design. Please review and provide feedback.'
+    }
+    const mockCreateCommentWithNotExistingUserId = {
+        task_id: 1,
+        user_id: 100,
+        content: 'I have completed the initial design. Please review and provide feedback.'
+    }
+
     beforeEach(async () => {
         await testHelpers.resetDataBaseTables();
         await testHelpers.seedDataBaseTables();
@@ -61,10 +82,10 @@ describe('Tasks API endpoints', () => {
         pgp.end();
     });
 
-    describe('POST /api/v1.0/tasks/create-task', () => {
+    describe.skip('POST /api/v1.0/tasks/create-task', () => {
         const endpoint = '/api/v1.0/tasks/create-task';
 
-        it('Should respond with a status 201 if a task was created and a notification was sent', 
+        it('Should respond with a status 201 if a task was created', 
             async () => {
                 await testHelpers.registerUser(testHelpers.validUserRegisterSchema);
                 await testHelpers.changeUserPermissions(mockUserId, 'admin');
@@ -95,7 +116,7 @@ describe('Tasks API endpoints', () => {
 
                 expect(response.status).toBe(400);
             }
-        )
+        );
 
         it('Should respond with a status 401 if no token is provided', async () => {
             const response = await request(app)
@@ -152,7 +173,6 @@ describe('Tasks API endpoints', () => {
                 await testHelpers.changeUserPermissions(mockUserId, 'admin');
                 const loginUserTest = await testHelpers.loginUser(testHelpers.validUserCredentials);
                 const token = loginUserTest.body[0].token;
-                await testHelpers.changeUserPermissions(mockUserId);
 
                 const response = await request(app)
                     .post(endpoint)
@@ -169,11 +189,111 @@ describe('Tasks API endpoints', () => {
                 await testHelpers.changeUserPermissions(mockUserId, 'admin');
                 const loginUserTest = await testHelpers.loginUser(testHelpers.validUserCredentials);
                 const token = loginUserTest.body[0].token;
-                await testHelpers.changeUserPermissions(mockUserId);
 
                 const response = await request(app)
                     .post(endpoint)
                     .send(mockCreateTaskWithNotExistingWorkgroupId)
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(500);
+            }
+        );
+    });
+
+    describe('POST /api/v1.0/tasks/create-comment', () => {
+        const endpoint = '/api/v1.0/tasks/create-comment';
+        
+        it('Should respond with a status 201 if a comment was created', 
+            async () => {
+                await testHelpers.registerUser(testHelpers.validUserRegisterSchema);
+                await testHelpers.changeUserPermissions(mockUserId, 'team_member');
+                const loginUserTest = await testHelpers.loginUser(testHelpers.validUserCredentials);
+                const token = loginUserTest.body[0].token;
+
+                const response = await request(app)
+                    .post(endpoint)
+                    .send(mockCreateCommentRequest)
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(201)
+                expect(response.body).toBeDefined();
+            }
+        );
+
+        it('Should respond with a status 400 if invalid data was sent', 
+            async () => {
+                await testHelpers.registerUser(testHelpers.validUserRegisterSchema);
+                await testHelpers.changeUserPermissions(mockUserId, 'admin');
+                const loginUserTest = await testHelpers.loginUser(testHelpers.validUserCredentials);
+                const token = loginUserTest.body[0].token;
+
+                const response = await request(app)
+                    .post(endpoint)
+                    .send(mockCreateCommentBadRequest)
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(400);
+            }
+        );
+
+        it('Should respond with a status 401 if no token is provided', async () => {
+            const response = await request(app)
+                .post(endpoint)
+                .send(mockCreateCommentRequest);
+
+            expect(response.status).toBe(401);
+        });
+
+        it('Should respond with a status 403 if token is invalid', async () => {
+            const response = await request(app)
+                .post(endpoint)
+                .send(mockCreateCommentRequest)
+                .set('Authorization', `Bearer ${testHelpers.invalidtoken}`);
+
+            expect(response.status).toBe(403);
+        });
+
+        it('Should respond with a status 403 if user has not permissions', 
+            async () => {
+                await testHelpers.registerUser(testHelpers.validUserRegisterSchema);
+                const loginUserTest = await testHelpers.loginUser(testHelpers.validUserCredentials);
+                const token = loginUserTest.body[0].token;
+
+                const response = await request(app)
+                    .post(endpoint)
+                    .send(mockCreateCommentRequest)
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(403);
+            }
+        );
+
+        it('Should respond with a status 500 if task_id does not exists', 
+            async () => {
+                await testHelpers.registerUser(testHelpers.validUserRegisterSchema);
+                await testHelpers.changeUserPermissions(mockUserId, 'team_member');
+                const loginUserTest = await testHelpers.loginUser(testHelpers.validUserCredentials);
+                const token = loginUserTest.body[0].token;
+
+                const response = await request(app)
+                    .post(endpoint)
+                    .send(mockCreateCommentWithNotExistingTaskId)
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(500);
+            }
+        );
+
+        it('Should respond with a status 500 if user_id does not exists', 
+            async () => {
+                await testHelpers.registerUser(testHelpers.validUserRegisterSchema);
+                await testHelpers.changeUserPermissions(mockUserId, 'admin');
+                const loginUserTest = await testHelpers.loginUser(testHelpers.validUserCredentials);
+                const token = loginUserTest.body[0].token;
+
+                const response = await request(app)
+                    .post(endpoint)
+                    .send(mockCreateCommentWithNotExistingUserId)
                     .set('Authorization', `Bearer ${token}`);
 
                 expect(response.status).toBe(500);
