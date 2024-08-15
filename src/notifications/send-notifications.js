@@ -1,7 +1,7 @@
 const socketapi = require('../../socket');
 const notificationRepository = require('../notifications/notifications-repository');
 
-exports.sendInAppNotification = async (userId, message, next) => {
+exports.sendCreateTaskNotification = async (userId, message, next) => {
     try {
         const notification = await notificationRepository.createNotificationQuery(userId, message, next);
         socketapi.io.to(userId).emit('notification', notification);
@@ -10,3 +10,5 @@ exports.sendInAppNotification = async (userId, message, next) => {
         return next(err);
     }
 }
+
+exports.sendIn

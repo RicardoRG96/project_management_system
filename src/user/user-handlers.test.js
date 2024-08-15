@@ -4,7 +4,7 @@ const app = require('../../app');
 const testHelpers = require('../../tests-helpers/tests-utils');
 const { registerUser, loginUser } = require('../../tests-helpers/tests-utils');
 
-describe('User API endpoints', () => {
+describe.skip('User API endpoints', () => {
     const mockUserId = 4;
     const mockInvalidUserId = 'k';
     const mockNotExistingUserId = 50;

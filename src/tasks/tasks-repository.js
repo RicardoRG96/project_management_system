@@ -10,3 +10,30 @@ exports.createTaskQuery = async (taskItems, next) => {
         .then(result => result)
         .catch(err => next(err));
 }
+
+exports.createCommentQuery = async (commentItems, next) => {
+    const keys = Object.keys(commentItems);
+    const properties = keys.join(', ');
+    const values = keys.map(key => `'${commentItems[key]}'`).join(', ');
+    const sql = `INSERT INTO comments (${properties}) VALUES (${values}) RETURNING *`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => next(err));
+}
+
+exports.getTaskById = async (taskId, next) => {
+    const sql = `SELECT * FROM tasks WHERE id = ${taskId}`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => next(err));
+}
+
+exports.getUserById = async (userId, next) => {
+    const sql = `SELECT * FROM users WHERE id = ${userId}`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => next(err));
+}

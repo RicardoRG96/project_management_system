@@ -19,7 +19,8 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "~1.9.1",
     "pg-promise": "^11.9.1",
-    "socket.io": "^4.7.5"
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
