@@ -11,3 +11,11 @@ exports.validateCreateTaskRequest = () => {
         body('due_date').notEmpty().escape()
     ];
 }
+
+exports.validateCreateCommentRequest = () => {
+    return [
+        body('task_id').notEmpty().isInt().escape(),
+        body('user_id').notEmpty().isInt().escape(),
+        body('content').notEmpty().escape()
+    ]
+}

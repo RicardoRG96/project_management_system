@@ -21,14 +21,14 @@ exports.createCommentService = async (comment, next) => {
     try {
         const task = await taskRepository.getTaskById(taskId, next);
         const user = await taskRepository.getUserById(userId, next);
-        const taskTitle = task.title;
-        const username = user.username;
-        const taskOwner = task.assigned_to;
+        const taskTitle = task[0].title;
+        const username = user[0].username;
+        const taskOwner = task[0].assigned_to.toString();
         const commentAddedToTaskMessage = `${username} added a comment to the task ${taskTitle}`;
 
-        const comment = await taskRepository.createCommentQuery(comment, next);
+        const createdComment = await taskRepository.createCommentQuery(comment, next);
         await sendInAppNotification(taskOwner, commentAddedToTaskMessage, next);
-        return comment;
+        return createdComment;
     }
     catch (err) {
         return next(err);
