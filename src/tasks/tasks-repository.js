@@ -22,6 +22,17 @@ exports.createCommentQuery = async (commentItems, next) => {
         .catch(err => next(err));
 }
 
+exports.createAttachmentQuery = async (attachmentItems, next) => {
+    const keys = Object.keys(attachmentItems);
+    const properties = keys.join(', ');
+    const values = properties.map(key => `'${attachmentItems[key]}'`).join(', ');
+    const sql = `INSERT INTO attachments (${properties}) VALUES (${values}) RETURNING *`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => next(err));
+}
+
 exports.getTaskById = async (taskId, next) => {
     const sql = `SELECT * FROM tasks WHERE id = ${taskId}`;
 
