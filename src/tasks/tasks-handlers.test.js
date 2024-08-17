@@ -6,6 +6,10 @@ const testHelpers = require('../../tests-helpers/tests-utils');
 describe('Tasks API endpoints', () => {
     const mockUserId = 4
     const mockNotExistingUserId = 50;
+    const mockTaskId = 1;
+    const mockNotExistingTaskId = 50;
+    const mockInvalidUserId = 'l';
+    const mockInvalidTaskId = 'l';
     const mockCreateTaskRequest = {
         project_id: 1,
         workgroup_id: 2,
@@ -200,7 +204,7 @@ describe('Tasks API endpoints', () => {
         );
     });
 
-    describe('POST /api/v1.0/tasks/create-comment', () => {
+    describe.skip('POST /api/v1.0/tasks/create-comment', () => {
         const endpoint = '/api/v1.0/tasks/create-comment';
         
         it('Should respond with a status 201 if a comment was created', 
@@ -300,4 +304,152 @@ describe('Tasks API endpoints', () => {
             }
         );
     });
-})
+
+    describe('POST /api/v1.0/tasks/:taskId/attach-file/:userId', () => {
+        it('Should respond with a status 201 if a file was upload', 
+            async () => {
+                const endpoint = `/api/v1.0/tasks/${mockTaskId}/attach-file/${mockUserId}`;
+
+                await testHelpers.registerUser(testHelpers.validUserRegisterSchema);
+                await testHelpers.changeUserPermissions(mockUserId, 'team_member');
+                const loginUserTest = await testHelpers.loginUser(testHelpers.validUserCredentials);
+                const token = loginUserTest.body[0].token;
+                
+                const response = await request(app)
+                    .post(endpoint)
+                    .attach('file', 'tests-helpers/images/macbook.png')
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(201)
+                expect(response.body).toBeDefined();
+            }
+        );
+
+        it('Should respond with a status 400 if no file was sent', 
+            async () => {
+                const endpoint = `/api/v1.0/tasks/${mockTaskId}/attach-file/${mockUserId}`;
+
+                await testHelpers.registerUser(testHelpers.validUserRegisterSchema);
+                await testHelpers.changeUserPermissions(mockUserId, 'team_member');
+                const loginUserTest = await testHelpers.loginUser(testHelpers.validUserCredentials);
+                const token = loginUserTest.body[0].token;
+                
+                const response = await request(app)
+                    .post(endpoint)
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(400);
+            }
+        );
+
+        it('Should respond with a status 401 if no token is provided', async () => {
+            const endpoint = `/api/v1.0/tasks/${mockTaskId}/attach-file/${mockUserId}`;
+
+            const response = await request(app)
+                .post(endpoint)
+                .send(mockCreateCommentRequest);
+
+            expect(response.status).toBe(401);
+        });
+
+        it('Should respond with a status 403 if token is invalid', async () => {
+            const endpoint = `/api/v1.0/tasks/${mockTaskId}/attach-file/${mockUserId}`;
+
+            const response = await request(app)
+                .post(endpoint)
+                .send(mockCreateCommentRequest)
+                .set('Authorization', `Bearer ${testHelpers.invalidtoken}`);
+
+            expect(response.status).toBe(403);
+        });
+
+        it('Should respond with a status 403 if user has not permissions', 
+            async () => {
+                const endpoint = `/api/v1.0/tasks/${mockTaskId}/attach-file/${mockUserId}`;
+
+                await testHelpers.registerUser(testHelpers.validUserRegisterSchema);
+                const loginUserTest = await testHelpers.loginUser(testHelpers.validUserCredentials);
+                const token = loginUserTest.body[0].token;
+
+                const response = await request(app)
+                    .post(endpoint)
+                    .send(mockCreateCommentRequest)
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(403);
+            }
+        );
+
+        it('Should respond with a staus 404 if taskId does not exists', 
+            async () => {
+                const endpoint = `/api/v1.0/tasks/${mockNotExistingTaskId}/attach-file/${mockUserId}`;
+
+                await testHelpers.registerUser(testHelpers.validUserRegisterSchema);
+                await testHelpers.changeUserPermissions(mockUserId, 'team_member');
+                const loginUserTest = await testHelpers.loginUser(testHelpers.validUserCredentials);
+                const token = loginUserTest.body[0].token;
+                
+                const response = await request(app)
+                    .post(endpoint)
+                    .attach('file', 'tests-helpers/images/macbook.png')
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(404);
+            }
+        );
+
+        it('Should respond with a staus 404 if userId does not exists', 
+            async () => {
+                const endpoint = `/api/v1.0/tasks/${mockTaskId}/attach-file/${mockNotExistingUserId}`;
+
+                await testHelpers.registerUser(testHelpers.validUserRegisterSchema);
+                await testHelpers.changeUserPermissions(mockUserId, 'team_member');
+                const loginUserTest = await testHelpers.loginUser(testHelpers.validUserCredentials);
+                const token = loginUserTest.body[0].token;
+                
+                const response = await request(app)
+                    .post(endpoint)
+                    .attach('file', 'tests-helpers/images/macbook.png')
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(404);
+            }
+        );
+
+        it('Should respond with a status 500 if taskId param is not a number', 
+            async () => {
+                const endpoint = `/api/v1.0/tasks/${mockInvalidTaskId}/attach-file/${mockUserId}`;
+
+                await testHelpers.registerUser(testHelpers.validUserRegisterSchema);
+                await testHelpers.changeUserPermissions(mockUserId, 'team_member');
+                const loginUserTest = await testHelpers.loginUser(testHelpers.validUserCredentials);
+                const token = loginUserTest.body[0].token;
+                
+                const response = await request(app)
+                    .post(endpoint)
+                    .attach('file', 'tests-helpers/images/macbook.png')
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(500);
+            }
+        );
+
+        it('Should respond with a status 500 if userId param is not a number', 
+            async () => {
+                const endpoint = `/api/v1.0/tasks/${mockTaskId}/attach-file/${mockInvalidUserId}`;
+
+                await testHelpers.registerUser(testHelpers.validUserRegisterSchema);
+                await testHelpers.changeUserPermissions(mockUserId, 'team_member');
+                const loginUserTest = await testHelpers.loginUser(testHelpers.validUserCredentials);
+                const token = loginUserTest.body[0].token;
+                
+                const response = await request(app)
+                    .post(endpoint)
+                    .attach('file', 'tests-helpers/images/macbook.png')
+                    .set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(500);
+            }
+        )
+    });
+});

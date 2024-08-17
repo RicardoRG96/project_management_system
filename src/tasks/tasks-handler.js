@@ -41,13 +41,12 @@ exports.createCommentHandler = async (req, res, next) => {
 exports.createAttachmentHandler = async (req, res, next) => {
     const taskId = req.params.taskId;
     const uploadedBy = req.params.userId;
-    const filename = req.file.filename;
-    const filePath = req.file.path;
     try {
-        console.log(uploadedBy)
         if (!req.file) {
             return res.status(400).json({ message: 'No file uploaded.'});
         }
+        const filename = req.file.filename;
+        const filePath = req.file.path;
         const attachment = {
             task_id: taskId,
             filename,
@@ -58,6 +57,9 @@ exports.createAttachmentHandler = async (req, res, next) => {
         fileCompressor(filePath,filename, next);
         if (!createdAttachment) {
             return next();
+        }
+        if (createdAttachment === 'not found') {
+            return res.status(404).json({ message: 'userId or taskId not found.' });
         }
         return res.status(201).json({ message: 'Image uploaded successfully!', filePath });
     }

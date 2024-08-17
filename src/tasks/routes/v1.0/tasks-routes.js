@@ -216,6 +216,16 @@ router.post(
  *        description: Unauthorized
  *      403:
  *        description: Forbidden
+ *      404:
+ *        description: Not found
+ *        content:
+ *          application/json:
+ *             schema:
+ *                 type: object
+ *                 properties:
+ *                     message:
+ *                        type: string
+ *                        example: userId or taskId not found.
  *      500:
  *        description: Server Error 
  */
