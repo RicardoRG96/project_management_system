@@ -40,8 +40,8 @@ exports.createAttachmentService = async (attachment, next) => {
     const userUploaderId = attachment.uploaded_by;
     try {
         const taskDetails = await taskRepository.getTaskById(taskId, next);
-        const taskOwnerId = taskDetails[0].assigned_to.toString();
         const userUploader = await taskRepository.getUserById(userUploaderId, next);
+        const taskOwnerId = taskDetails[0].assigned_to.toString();
         const userUploaderName = userUploader[0].username;
         const attachmentFileMessage = `${userUploaderName} has uploaded a file to your task`;
 

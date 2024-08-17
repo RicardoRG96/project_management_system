@@ -1,5 +1,6 @@
 const tasksService = require('./tasks-service');
 const { validationResult } = require('express-validator');
+const { fileCompressor } = require('./attachments-management/attachment-handler');
 
 exports.createTaskHandler = async (req, res, next) => {
     const task = req.body;
@@ -39,14 +40,11 @@ exports.createCommentHandler = async (req, res, next) => {
 
 exports.createAttachmentHandler = async (req, res, next) => {
     const taskId = req.params.taskId;
-    const uploadedBy = req.params.uploadedBy;
+    const uploadedBy = req.params.userId;
     const filename = req.file.filename;
     const filePath = req.file.path;
     try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
+        console.log(uploadedBy)
         if (!req.file) {
             return res.status(400).json({ message: 'No file uploaded.'});
         }
@@ -57,6 +55,7 @@ exports.createAttachmentHandler = async (req, res, next) => {
             uploaded_by: uploadedBy
         }
         const createdAttachment = await tasksService.createAttachmentService(attachment, next);
+        fileCompressor(filePath,filename, next);
         if (!createdAttachment) {
             return next();
         }

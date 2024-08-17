@@ -5,6 +5,7 @@ const validate = require('../../validation/validate-tasks-requests');
 const verifyToken = require('../../../auth/verify-token');
 const hasPermissions = require('../../../auth/verify-role');
 const ROLES = require('../../../auth/roles');
+const attachmentHandler = require('../../attachments-management/attachment-handler'); 
 
 /** POST Methods */
 
@@ -169,6 +170,61 @@ router.post(
     hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TECHNICAL_LEADER, ROLES.TEAM_MEMBER]),
     validate.validateCreateCommentRequest(), 
     tasksHandler.createCommentHandler
+);
+
+/**
+ * @openapi
+ * '/api/v1.0/tasks/{taskId}/attach-file/{userId}':
+ *  post:
+ *     tags:
+ *     - Tasks Handlers
+ *     summary: Attaches a file
+ *     parameters:
+ *      - name: taskId
+ *        in: path
+ *        description: The id of the task
+ *        required: true
+ *      - name: userId
+ *        in: path
+ *        description: The id of the user
+ *        required: true
+ *     responses:
+ *      201:
+ *        description: Created
+ *        content:
+ *          application/json:
+ *             schema:
+ *                 type: object
+ *                 properties:
+ *                     message:
+ *                        type: string
+ *                        example: Image uploaded successfully!
+ *                     filePath:
+ *                        type: string
+ *                        example: /uploads/api_documentation.pdf
+ *      400:
+ *        description: Bad request
+ *        content:
+ *          application/json:
+ *             schema:
+ *                 type: object
+ *                 properties:
+ *                     message:
+ *                        type: string
+ *                        example: No file uploaded.
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
+ *      500:
+ *        description: Server Error 
+ */
+router.post(
+    '/:taskId/attach-file/:userId', 
+    verifyToken,
+    hasPermissions([ROLES.ADMIN, ROLES.PROJECT_MANAGER, ROLES.TECHNICAL_LEADER, ROLES.TEAM_MEMBER]),
+    attachmentHandler.upload.single('file'),
+    tasksHandler.createAttachmentHandler
 );
 
 module.exports = router;

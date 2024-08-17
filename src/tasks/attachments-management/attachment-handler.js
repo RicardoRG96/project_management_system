@@ -4,7 +4,7 @@ const path = require('node:path');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, './uploads');
+        cb(null, 'uploads/');
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname));
@@ -13,11 +13,10 @@ const storage = multer.diskStorage({
 
 exports.upload = multer({ storage });
 
-exports.imageCompressor = (filePath, fileName) => {
+exports.fileCompressor = (filePath, fileName, next) => {
     return sharp(filePath)
         .resize(200)
-        .toFile(`../../../uploads/compressed_${fileName}`, (err, info) => {
-            if (err) throw err;
-            console.log(info);
+        .toFile(`uploads/compressed_${fileName}`, (err, info) => {
+            if (err) return next(err);
         });
 }

@@ -25,7 +25,7 @@ exports.createCommentQuery = async (commentItems, next) => {
 exports.createAttachmentQuery = async (attachmentItems, next) => {
     const keys = Object.keys(attachmentItems);
     const properties = keys.join(', ');
-    const values = properties.map(key => `'${attachmentItems[key]}'`).join(', ');
+    const values = keys.map(key => `'${attachmentItems[key]}'`).join(', ');
     const sql = `INSERT INTO attachments (${properties}) VALUES (${values}) RETURNING *`;
 
     return db.any(sql)
