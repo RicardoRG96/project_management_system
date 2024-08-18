@@ -48,3 +48,20 @@ exports.getUserById = async (userId, next) => {
         .then(result => result)
         .catch(err => next(err));
 }
+
+exports.getNotCompletedTasksAndUserInfo = async () => {
+    const sql = `SELECT u.username AS username,
+        u.email AS email,
+        t.title AS task_title,
+        t.assigned_to AS task_owner,
+        t.due_date AS due_date
+    FROM users u
+    INNER JOIN tasks t ON u.id = t.assigned_to
+    WHERE t.status IN ('in_progress', 'pending');`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => {
+            throw new Error(err);
+        } );
+}
