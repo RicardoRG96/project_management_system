@@ -1,5 +1,6 @@
 const taskRepository = require('./tasks-repository');
 const { sendInAppNotification } = require('../notifications/send-notifications');
+const eventEmitter = require('../../scheduled-jobs/events');
 
 exports.createTaskService = async (task, next) => {
     const userId = task.assigned_to;
@@ -7,7 +8,14 @@ exports.createTaskService = async (task, next) => {
     const assignedTaskMessage = `You have been assigned a new task: "${taskTitle}"`;
     try {
         const createdTask = await taskRepository.createTaskQuery(task, next);
+        const user = await taskRepository.getUserById(userId, next);
         await sendInAppNotification(userId, assignedTaskMessage, next);
+        const emailDetails = {
+            username: user[0].username,
+            title: taskTitle,
+            due_date: task.due_date
+        }
+        eventEmitter.emit('assignedTask', emailDetails);
         return createdTask;
     }
     catch (err) {
