@@ -1,6 +1,6 @@
 const EventEmitter = require('node:events');
 const eventEmitter = new EventEmitter();
-const { sendEmail } = require('./email-sending-service');
+const { sendEmail } = require('./email-service-config');
 
 const onRegisterUser = (user) => {
     const emailText = `Hola ${user.username}, ¡bienvenido a nuestra plataforma!`;

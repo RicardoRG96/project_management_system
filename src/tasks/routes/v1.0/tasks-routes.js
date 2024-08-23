@@ -237,4 +237,27 @@ router.post(
     tasksHandler.createAttachmentHandler
 );
 
+router.get('/create-pdf', (req, res, next) => {
+    const fs = require("fs");
+    const PDFDocument = require("pdfkit-table");
+
+    let doc = new PDFDocument({ margin: 30, size: 'A4' });
+    doc.pipe(fs.createWriteStream("./document.pdf"));
+    const tableArray = {
+        headers: ["Country", "Conversion rate", "Trend"],
+        rows: [
+          ["Switzerland", "12%", "+1.12%"],
+          ["France", "67%", "-0.98%"],
+          ["England", "33%", "+4.44%"],
+        ],
+    };
+    doc.table(tableArray, { width: 300 });
+    doc.pipe(res);
+    doc.end();
+})
+
+// router.get('/create-pdf', (req, res ,next) => {
+//     res.sendFile('C:/Users/ricar/Desktop/Repos/project_management_system/document.pdf')
+// })
+
 module.exports = router;

@@ -65,3 +65,64 @@ exports.getNotCompletedTasksAndUserInfo = async () => {
             throw new Error(err);
         } );
 }
+
+//TODO: editar query y poner al final WHERE DATE(t.created_at) = CURRENT_DATE
+exports.getAdminDailyTasksReport = async () => {
+    const sql = `SELECT t.id AS task_id,
+        p.name AS project_name,
+        wg.name AS workgroup_name,
+        t.title AS task_title,
+        t.description AS task_description,
+        t.status AS task_status,
+        u.username AS assigned_to,
+        t.due_date AS task_due_date,
+        t.created_at AS task_creation_date,
+        t.updated_at AS task_update_date
+    FROM tasks t
+    INNER JOIN workgroups wg ON t.workgroup_id = wg.id
+    INNER JOIN users u ON t.assigned_to = u.id
+    INNER JOIN projects p ON t.project_id = p.id
+    `;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => {
+            throw new Error(err);
+        });
+}
+
+exports.getProjectManagerDailyTasksReport = async (projectId) => {
+    const sql = `SELECT t.id AS task_id,
+        p.name AS project_name,
+        wg.name AS workgroup_name,
+        t.title AS task_title,
+        t.description AS task_description,
+        t.status AS task_status,
+        u.username AS assigned_to,
+        t.due_date AS task_due_date,
+        t.created_at AS task_creation_date,
+        t.updated_at AS task_update_date
+    FROM tasks t
+    INNER JOIN workgroups wg ON t.workgroup_id = wg.id
+    INNER JOIN users u ON t.assigned_to = u.id
+    INNER JOIN projects p ON t.project_id = p.id
+    WHERE DATE(t.created_at) = CURRENT_DATE AND t.project_id = ${projectId}`;
+}
+
+exports.getUsersByRole = async (role) => {
+    const sql = `SELECT p.id AS project_id,
+        p.name AS project_name,
+        u.id AS user_id,
+        u.username AS username,
+        u.email AS email,
+        u.role AS role
+    FROM projects p
+    INNER JOIN users u ON p.owner_id = u.id
+    WHERE role = '${role}'`;
+
+    return db.any(sql)
+        .then(result => result)
+        .catch(err => {
+            throw new Error(err);
+        });
+}
